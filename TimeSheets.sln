@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeSheets", "TimeSheets\TimeSheets.csproj", "{5D225A6E-DFEF-44D5-894D-980367490BF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAccessor", "SQLAccessor\DBAccessor.csproj", "{170CA7AB-3B21-4269-907B-52E546D24865}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLAccessor", "SQLAccessor\SQLAccessor.csproj", "{170CA7AB-3B21-4269-907B-52E546D24865}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic", "Logic\Logic.csproj", "{329185EB-398A-4BA6-A957-CEEC800F76A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{3877A9D1-F6C3-4663-9C11-01AFB80720A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{329185EB-398A-4BA6-A957-CEEC800F76A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{329185EB-398A-4BA6-A957-CEEC800F76A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{329185EB-398A-4BA6-A957-CEEC800F76A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3877A9D1-F6C3-4663-9C11-01AFB80720A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3877A9D1-F6C3-4663-9C11-01AFB80720A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3877A9D1-F6C3-4663-9C11-01AFB80720A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3877A9D1-F6C3-4663-9C11-01AFB80720A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

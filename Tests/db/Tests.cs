@@ -1,7 +1,8 @@
-﻿using NUnit.Framework;
-using SQLAccessor.Contexts;
-
-using SQLAccessor.Mappings;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using NUnit.Framework;
+using TutorMapping;
 
 namespace Tests.db
 {
@@ -21,9 +22,19 @@ namespace Tests.db
 		[Test]
 		public void TestSqliteContext()
 		{
-			using (var context = new SqliteDbContext("SqliteDbContext"))
+			using (var context = new TutorMappingContext(@"K:\mine\sources\winphone\desk\TimeSheets\test.db"))
 			{
-				var user = context.User.Add(new User {Name = "dss"});
+				var proj = new Project {Type = (int)Project.ProjectType.Design};
+
+				proj.Activities = new List<Activity> {new Activity {Date = DateTime.Now, Desc = "Test"}};
+
+				var r = context.AddProject(proj);
+				
+				context.Project.Attach(r);
+				context.Entry(proj).State = EntityState.Added;
+				var res = context.SaveChanges();
+
+				var found = context.Project.Find(res);
 			}
 		}
 	}

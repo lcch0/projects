@@ -1,31 +1,35 @@
-﻿using System.Data.Entity;
+﻿using SQLAccessor.Interfaces;
 using SQLAccessor.Mappings;
+using SQLite;
 
 namespace SQLAccessor.Contexts
-{
-	public class SqliteDbContext : DbContext
+{//https://developer.xamarin.com/guides/cross-platform/application_fundamentals/data/part_3_using_sqlite_orm/
+	public class SqliteDbContext : ISqliteContext
 	{
-		public SqliteDbContext(string configString) : base(configString)
+		private readonly SQLiteConnection _connection;
+
+		public SqliteDbContext(string path)
 		{
-			
+			_connection = new SQLiteConnection(path);
 		}
 
-		public DbSet<User> User { get; set; }
-		public DbSet<Project> Project { get; set; }
-		public DbSet<Activity> Activity { get; set; }
-		public DbSet<Draft> Draft { get; set; }
-
-		protected override void OnModelCreating(DbModelBuilder modelBuilder)
+		public void Dispose()
 		{
-			base.OnModelCreating(modelBuilder);
+			_connection?.Close();
+			_connection?.Dispose();
+		}
 
-			modelBuilder.Entity<User>().HasKey(t => t.UserId);
-			modelBuilder.Entity<Project>().HasKey(t => t.Id);
-			modelBuilder.Entity<Activity>().HasKey(t => t.Id);
-			modelBuilder.Entity<Draft>().HasKey(t => t.Id);
+		public SQLiteConnection Connection => _connection;
+		public void CreateDb()
+		{
+			_connection.CreateTable<Project>();
+			_connection.CreateTable<Activity>();
+		}
 
-			//proj to activity
-			modelBuilder.Entity<Project>().HasMany(t => t.Activities);
+		public void ClearTables()
+		{
+			_connection.DeleteAll<Project>();
+			_connection.DeleteAll<Activity>();
 		}
 	}
 }

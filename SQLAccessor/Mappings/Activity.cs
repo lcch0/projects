@@ -1,20 +1,19 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
+using SQLAccessor.Interfaces;
+using SQLite;
 
 namespace SQLAccessor.Mappings
 {
 	[Table("activities")]
-	public class Activity
+	public class Activity : BaseActiveRecord<Activity>, IIdRecord
 	{
-		[Column("activityid")]
-		public int Id { get; set; }
+		[PrimaryKey, AutoIncrement, Column("activityid")]
+		public int Id { get; set; } = 1;
 		[Column("date")]
 		public DateTime Date { get; set; }
-		[Column("desc")]
+		[MaxLength(1024), Column("desc")]
 		public string Desc { get; set; }
-
-		public virtual Project Project { get; set; }
-		public virtual User User { get; set; }
-		public virtual Draft Draft { get; set; }
+		[Column("projectid")]
+		public int ParentId { get; set; }
 	}
 }

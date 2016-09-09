@@ -1,7 +1,7 @@
 using System;
 using SQLite;
 
-namespace TutorMapping
+namespace SQLAccessor.Interfaces
 {
 	public interface ISqliteContext : IDisposable
 	{

@@ -9,20 +9,25 @@ namespace TutorMapping
 		public TutorMappingContext(string path)
 		{
 			_connection = new SQLiteConnection(path);
-			CreateOrOpenDb();
 		}
 
-		private void CreateOrOpenDb()
+		public void Dispose()
+		{
+			_connection?.Close();
+			_connection?.Dispose();
+		}
+
+		public SQLiteConnection Connection =>_connection;
+		public void CreateDb()
 		{
 			_connection.CreateTable<Project>();
 			_connection.CreateTable<Activity>();
 		}
 
-		public void Dispose()
+		public void ClearTables()
 		{
-			_connection?.Dispose();
+			_connection.DeleteAll<Project>();
+			_connection.DeleteAll<Activity>();
 		}
-
-		public SQLiteConnection Connection =>_connection;
 	}
 }

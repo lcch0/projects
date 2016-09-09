@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using SQLite;
 
 namespace TutorMapping
 {
 	[Table("projects")]
-	public class Project : IActiveRecord<Project>
+	public class Project : BaseActiveRecord<Project>, IIdRecord
 	{
 		public enum ProjectType
 		{
@@ -14,35 +15,38 @@ namespace TutorMapping
 		}
 
 		[PrimaryKey, AutoIncrement, Column("projectid")]
-		public int Id { get; set; }
+		public int Id { get; set; } = 1;
+		[Ignore]
+		public int ParentId { get; set; } = -1;
 		[Column("type")]
 		public int Type { get; set; }
-
+		[Ignore]
 		public IEnumerable<Activity> Activities { get; set; }
 
-		public IEnumerable<Project> GetRecord(int id, ISqliteContext context)
+		public override IEnumerable<Project> GetRecord(ISqliteContext context, int id = -1, int parentid = -1)
 		{
-			IEnumerable<Project> projects = null;
-			if (id < 0)
+			var projects = base.GetRecord(context, id, parentid);
+			
+			var list = projects.ToList();
+			foreach (var project in list)
 			{
-				projects = context.Connection.Table<Project>();
-			}
-			else
-			{
-				projects = context.Connection.Table<Project>().Where(p => p.Id == id);
+				project.Activities = new Activity().GetRecord(context, -1, project.Id);
 			}
 
-			var emptyActivity = new Activity();
-			foreach (var project in projects)
-			{
-
-				project.Activities = emptyActivity.GetRecord()
-			}
+			return list;
 		}
 
-		public int AddRecord(Project record, ISqliteContext context)
+		public override int AddRecord(ISqliteContext context)
 		{
-			return context.Connection.Insert(record);
+			int pid = base.AddRecord(context);
+			
+			foreach (var activity in Activities)
+			{
+				activity.ParentId = pid;
+				activity.AddRecord(context);
+			}
+
+			return pid;
 		}
 	}
 }

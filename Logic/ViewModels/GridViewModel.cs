@@ -7,12 +7,12 @@ namespace Logic.ViewModels
 {
 	public class GridViewModel : BaseViewModel
 	{
-		public List<EditEntry> EditEntries
+		public List<ActivityModel> EditEntries
 		{
-			get { return Model.Entries; }
+			get { return Model.Activities; }
 			set
 			{
-				Model.Entries = value;
+				Model.Activities = value;
 			}
 		}
 
@@ -21,12 +21,12 @@ namespace Logic.ViewModels
 		public GridViewModel(TimeSheetsModel model) : base(model)
 		{
 			Model = model;
-			SelectionChangedCommand = new RelayCommand<EditEntry>(SelectionChanged);
+			SelectionChangedCommand = new RelayCommand<ActivityModel>(SelectionChanged);
 		}
 
-		private void SelectionChanged(EditEntry obj)
+		private void SelectionChanged(ActivityModel obj)
 		{
-			Model.SelectedEntry = obj;
+			Model.SelectedActivity = obj;
 		}
 	}
 }

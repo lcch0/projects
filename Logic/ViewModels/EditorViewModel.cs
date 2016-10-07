@@ -9,15 +9,27 @@ namespace Logic.ViewModels
 {
 	public class EditorViewModel : BaseViewModel
 	{
-		public EditEntry SelectedEntry
+		public ActivityModel SelectedActivity
 		{
 			get
 			{
-				return Model.SelectedEntry;
+				return Model.SelectedActivity;
 			}
 			set
 			{
-				Model.SelectedEntry = value;
+				Model.SelectedActivity = value;
+			}
+		}
+
+		public ProjectModel SelectedProject
+		{
+			get
+			{
+				return Model.SelectedProject;
+			}
+			set
+			{
+				Model.SelectedProject = value;
 			}
 		}
 
@@ -26,24 +38,24 @@ namespace Logic.ViewModels
 		public EditorViewModel(TimeSheetsModel model) : base(model)
 		{
 			Model = model;
-			if (Model.SelectedEntry == null)
-				Model.SelectedEntry = Model.Entries.LastOrDefault();
+			if (Model.SelectedActivity == null)
+				Model.SelectedActivity = Model.Activities.LastOrDefault();
 
-			ApplyChangesCommand = new RelayCommand<EditEntry>(ApplyChanges);
+			ApplyChangesCommand = new RelayCommand<ActivityModel>(ApplyChanges);
 		}
 
-		private void ApplyChanges(EditEntry obj)
+		private void ApplyChanges(ActivityModel obj)
 		{
-			Model.SelectedEntry.Project = obj.Project;
-			Model.SelectedEntry.Days = obj.Days;
-			Model.SelectedEntry.Description = obj.Description;
-			Model.SelectedEntry.Date = obj.Date;
-			Model.RaisePropertyChanged(this, () => Model.SelectedEntry);
+			SelectedActivity.ProjectType = SelectedProject.ProjectType;
+			SelectedActivity.Days = obj.Days;
+			SelectedActivity.Description = obj.Description;
+			SelectedActivity.Date = obj.Date;
+			Model.RaisePropertyChanged(this, () => Model.SelectedActivity);
 		}
 
 		protected override void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if(sender != this && e.PropertyName == PropertySupport.ExtractPropertyName(()=>Model.SelectedEntry))
+			if(sender != this && e.PropertyName == PropertySupport.ExtractPropertyName(()=>Model.SelectedActivity))
 				base.OnModelPropertyChanged(sender, e);
 		}
 	}

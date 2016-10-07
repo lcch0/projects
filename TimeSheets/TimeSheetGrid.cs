@@ -32,7 +32,7 @@ namespace TimeSheets
 				return;
 			}
 
-			var entry = _gridView.GetRow(_gridView.FocusedRowHandle) as EditEntry;
+			var entry = _gridView.GetRow(_gridView.FocusedRowHandle) as ActivityModel;
 			if (entry != null)
 				Model.SelectionChangedCommand.Execute(entry);
 		}

@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SQLite;
 
 namespace TutorMapping
 {
-	[Table("activities")]
-	public class Activity : BaseActiveRecord<Activity>, IIdRecord
+	public class Activity
 	{
-		[PrimaryKey, AutoIncrement, Column("activityid")]
-		public int Id { get; set; } = 1;
-		[Column("date")]
-		public DateTime Date { get; set; }
-		[MaxLength(1024), Column("desc")]
-		public string Desc { get; set; }
-		[Column("projectid")]
-		public int ParentId { get; set; }
+		public int Id { get; set; }
+		public DateTime Date { get; set; } = DateTime.Now;
+		public string Desc { get; set; } = string.Empty;
+		public Project Project { get; set; } = new Project();
+		public User User { get; set; } = new User();
 	}
 }

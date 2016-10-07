@@ -1,6 +1,8 @@
-﻿namespace TutorMapping
+﻿using SQLAccessor.Interfaces;
+
+namespace SQLAccessor.Serializable
 {
-	public class Project
+	public class Project : IIdRecord
 	{
 		public enum ProjectType
 		{
@@ -10,6 +12,7 @@
 		}
 
 		public int Id { get; set; }
+		public string TableName => "Projects";
 		public ProjectType Type { get; set; }
 	}
 }

@@ -1,6 +1,6 @@
-﻿using SQLAccessor.Interfaces;
+﻿using System.IO;
+using SQLAccessor.Interfaces;
 using SQLAccessor.Mappings;
-using SQLite;
 
 namespace SQLAccessor.Contexts
 {//https://developer.xamarin.com/guides/cross-platform/application_fundamentals/data/part_3_using_sqlite_orm/
@@ -11,6 +11,16 @@ namespace SQLAccessor.Contexts
 		public SqliteDbContext(string path)
 		{
 			_connection = new SQLiteConnection(path);
+			CreateDb();
+			//if (!File.Exists(path))
+			//{
+			//	_connection = new SQLiteConnection(path, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite);
+			//	CreateDb();
+			//}
+			//else
+			//{
+			//	_connection = new SQLiteConnection(path, SQLiteOpenFlags.ReadWrite);
+			//}
 		}
 
 		public void Dispose()
@@ -23,13 +33,17 @@ namespace SQLAccessor.Contexts
 		public void CreateDb()
 		{
 			_connection.CreateTable<Project>();
+			_connection.CreateTable<User>();
 			_connection.CreateTable<Activity>();
+			_connection.CreateTable<Draft>();
 		}
 
 		public void ClearTables()
 		{
 			_connection.DeleteAll<Project>();
+			_connection.DeleteAll<User>();
 			_connection.DeleteAll<Activity>();
+			_connection.DeleteAll<Draft>();
 		}
 	}
 }

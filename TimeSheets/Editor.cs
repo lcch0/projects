@@ -17,7 +17,7 @@ namespace TimeSheets
 
 		private void OnApplyClick(object sender, System.EventArgs e)
 		{
-			var obj = new EditEntry
+			var obj = new ActivityModel
 			{
 				Project = _cmbProject.Text,
 				Days = (int) _spnDays.Value,
@@ -38,7 +38,7 @@ namespace TimeSheets
 
 		private void UpdateUI()
 		{
-			if (Model.SelectedEntry != null)
+			if (Model.SelectedActivity != null)
 			{
 				_dateEdit.DateTime = Model.SelectedEntry.Date;
 				_cmbProject.Text = Model.SelectedEntry.Project;

@@ -30,19 +30,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LiteDB, Version=2.0.2.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiteDB.2.0.2\lib\net35\LiteDB.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Models\DraftModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Models\ProjectModel.cs" />
     <Compile Include="Models\DayTimer.cs" />
-    <Compile Include="Models\EditEntry.cs" />
+    <Compile Include="Models\ActivityModel.cs" />
     <Compile Include="ViewModels\GridViewModel.cs" />
     <Compile Include="Models\mvvm\ObservableObject.cs" />
     <Compile Include="Models\mvvm\PropertySupport.cs" />
@@ -58,6 +63,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SQLAccessor\SQLAccessor.csproj">
+      <Project>{170CA7AB-3B21-4269-907B-52E546D24865}</Project>
+      <Name>SQLAccessor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

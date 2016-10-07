@@ -3,6 +3,6 @@
 	public interface IIdRecord
 	{
 		int Id { get; set; }
-		int ParentId { get; set; }
+		string TableName { get; }
 	}
 }

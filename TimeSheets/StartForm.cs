@@ -24,12 +24,19 @@ namespace TimeSheets
 
 		private void InitializeModel()
 		{
-			var model = new TimeSheetsModel();
+			try
+			{
+				var model = new TimeSheetsModel();
 
-			Model = new MainFormViewModel(model);
-			Model.LoadSettingsCommand.Execute(Settings.GetDefaultPath(Environment.CurrentDirectory));
-			Model.LoadDBCommand.Execute(Model);
-			Model.StartTimersCommand.Execute(Model);
+				Model = new MainFormViewModel(model);
+				Model.LoadSettingsCommand.Execute(Settings.GetDefaultPath(Environment.CurrentDirectory));
+				Model.LoadDBCommand.Execute(Model);
+				Model.StartTimersCommand.Execute(Model);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(this, ex.Message);
+			}
 		}
 		
 		protected override void OnLoad(EventArgs e)

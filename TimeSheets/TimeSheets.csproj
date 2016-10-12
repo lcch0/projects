@@ -138,10 +138,13 @@
       <Project>{329185eb-398a-4ba6-a957-ceec800f76a6}</Project>
       <Name>Logic</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SQLAccessor\SQLAccessor.csproj">
+    <ProjectReference Include="..\Storage\Storage.csproj">
       <Project>{170CA7AB-3B21-4269-907B-52E546D24865}</Project>
-      <Name>SQLAccessor</Name>
+      <Name>Storage</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Storage.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

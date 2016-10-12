@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using Logic.Commands;
@@ -33,6 +34,18 @@ namespace Logic.ViewModels
 			}
 		}
 
+		public List<ProjectModel> Projects
+		{
+			get
+			{
+				return Model.Projects;
+			}
+			set
+			{
+				Model.Projects = value;
+			}
+		}
+
 		public ICommand ApplyChangesCommand { get; set; }
 
 		public EditorViewModel(TimeSheetsModel model) : base(model)
@@ -41,16 +54,16 @@ namespace Logic.ViewModels
 			if (Model.SelectedActivity == null)
 				Model.SelectedActivity = Model.Activities.LastOrDefault();
 
-			ApplyChangesCommand = new RelayCommand<ActivityModel>(ApplyChanges);
+			ApplyChangesCommand = new RelayCommand<EditorViewModel>(ApplyChanges);
 		}
 
-		private void ApplyChanges(ActivityModel obj)
+		private void ApplyChanges(EditorViewModel obj)
 		{
-			SelectedActivity.ProjectType = SelectedProject.ProjectType;
-			SelectedActivity.Days = obj.Days;
-			SelectedActivity.Description = obj.Description;
-			SelectedActivity.Date = obj.Date;
-			Model.RaisePropertyChanged(this, () => Model.SelectedActivity);
+			//SelectedActivity.ProjectType = SelectedProject.ProjectType;
+			//SelectedActivity.Days = obj.Days;
+			//SelectedActivity.Description = obj.Description;
+			//SelectedActivity.Date = obj.Date;
+			//Model.RaisePropertyChanged(this, () => Model.SelectedActivity);
 		}
 
 		protected override void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)

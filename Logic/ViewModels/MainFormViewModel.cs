@@ -4,8 +4,8 @@ using System.Linq;
 using System.Windows.Input;
 using Logic.Commands;
 using Logic.Models;
-using SQLAccessor.Serializable;
-using SQLAccessor.Serializers;
+using Storage.Serializable;
+using Storage.Serializers;
 
 namespace Logic.ViewModels
 {
@@ -43,17 +43,25 @@ namespace Logic.ViewModels
 
 			Model.Activities = new List<ActivityModel>();
 
-			using (var context = new LiteDbSerializer(Model.Settings.ConnectionStr))
+			try
 			{
-				LoadProjects(context);
-				LoadUsers(context);
-				LoadActivities(context);
-			}
+				using (var context = new LiteDbSerializer(Model.Settings.ConnectionStr))
+				{
+					LoadProjects(context);
+					LoadUsers(context);
+					LoadActivities(context);
+				}
 
-			if (Model.Activities.Count > 0)
+				if (Model.Activities.Count > 0)
+				{
+					Model.Activities = Model.Activities.OrderByDescending(e => e.Date).ToList();
+					Model.SelectedActivity = Model.Activities[0];
+				}
+			}
+			catch (Exception ex)
 			{
-				Model.Activities = Model.Activities.OrderByDescending(e => e.Date).ToList();
-				Model.SelectedActivity = Model.Activities[0];
+				DummyLoad();
+				throw;
 			}
 		}
 
@@ -92,10 +100,18 @@ namespace Logic.ViewModels
 		
 		private void DummyLoad()
 		{
+			var p = new Project {ProjectType = (int) ProjectModel.eType.Design};
+			var pmodel = new ProjectModel(p);
+			Model.Projects.Add(pmodel);
+
+			var user = new User {Name = "No user"};
+			var umodel = new UserModel(user);
+			Model.Users.Add(umodel);
+
 			var e = new Activity
 			{
-				Project = new Project {Type = Project.ProjectType.Design},
-				User = new User {Name = "No user"},
+				Project = p,
+				User = user,
 				Date = DateTime.Now - TimeSpan.FromDays(7),
 				Days = 5
 			};

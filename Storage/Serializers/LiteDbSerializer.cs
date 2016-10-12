@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using LiteDB;
-using SQLAccessor.Contexts;
-using SQLAccessor.Interfaces;
+using Storage.Contexts;
+using Storage.Interfaces;
 
-namespace SQLAccessor.Serializers
+namespace Storage.Serializers
 {
 	/// <summary>
 	/// 

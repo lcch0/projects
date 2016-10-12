@@ -1,6 +1,6 @@
-﻿using SQLAccessor.Interfaces;
+﻿using Storage.Interfaces;
 
-namespace SQLAccessor.Serializable
+namespace Storage.Serializable
 {
 	public class Draft : IIdRecord
 	{

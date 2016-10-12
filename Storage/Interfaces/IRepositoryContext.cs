@@ -1,6 +1,6 @@
 using System;
 
-namespace SQLAccessor.Interfaces
+namespace Storage.Interfaces
 {
 	public interface IRepositoryContext<out T> : IDisposable
 	{

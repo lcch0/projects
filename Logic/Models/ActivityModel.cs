@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using SQLAccessor.Serializable;
+using Storage.Serializable;
 
 namespace Logic.Models
 {
@@ -14,8 +14,13 @@ namespace Logic.Models
 			Days = activity.Days;
 			Description = activity.Desc;
 			Drafts = activity.Drafts?.Select(d => new DraftModel(d)).ToList();
-			ProjectType = activity.Project?.Type ?? Project.ProjectType.Design;
+			ProjectType = ProjectModel.GetProjectType(activity.Project?.ProjectType);
 			UserName = activity.User?.Name ?? "No user";
+		}
+
+		public ActivityModel()
+		{
+			
 		}
 
 		public DateTime Date { get; set; }
@@ -26,25 +31,9 @@ namespace Logic.Models
 		public int Week
 			=> CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(Date, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
 
-		public Project.ProjectType ProjectType { get; set; }
+		public ProjectModel.eType ProjectType { get; set; }
 
-		public string ProjectDesc
-		{
-			get
-			{
-				switch (ProjectType)
-				{
-					case Project.ProjectType.Design:
-						return "Design";
-					case Project.ProjectType.Mobile:
-						return "Mobile";
-					case Project.ProjectType.Unity:
-						return "Unity";
-					default:
-						return "Design";
-				}
-			}
-		}
+		public string ProjectDesc => ProjectModel.GetProjectDesc(ProjectType);
 
 		public string UserName { get; set; }
 	}

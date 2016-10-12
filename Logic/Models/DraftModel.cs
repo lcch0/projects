@@ -1,4 +1,4 @@
-﻿using SQLAccessor.Serializable;
+﻿using Storage.Serializable;
 
 namespace Logic.Models
 {

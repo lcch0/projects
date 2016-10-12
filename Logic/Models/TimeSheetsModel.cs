@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Logic.Models.mvvm;
-using SQLAccessor.Serializable;
+using Storage.Serializable;
 
 namespace Logic.Models
 {

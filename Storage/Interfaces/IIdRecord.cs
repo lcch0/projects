@@ -1,4 +1,4 @@
-﻿namespace SQLAccessor.Interfaces
+﻿namespace Storage.Interfaces
 {
 	public interface IIdRecord
 	{

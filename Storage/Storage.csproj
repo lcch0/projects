@@ -7,8 +7,8 @@
     <ProjectGuid>{170CA7AB-3B21-4269-907B-52E546D24865}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SQLAccessor</RootNamespace>
-    <AssemblyName>SQLAccessor</AssemblyName>
+    <RootNamespace>Storage</RootNamespace>
+    <AssemblyName>Storage</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

@@ -16,15 +16,18 @@
 		private void InitializeComponent()
 		{
 			this._pnlEditor = new System.Windows.Forms.Panel();
+			this._btnCancel = new DevExpress.XtraEditors.SimpleButton();
+			this._btnEdit = new DevExpress.XtraEditors.SimpleButton();
+			this._btnAdd = new DevExpress.XtraEditors.SimpleButton();
 			this._grpEdit = new System.Windows.Forms.GroupBox();
 			this._dateEdit = new DevExpress.XtraEditors.DateEdit();
-			this._btnApply = new DevExpress.XtraEditors.SimpleButton();
 			this._spnDays = new DevExpress.XtraEditors.SpinEdit();
 			this._memoDesc = new DevExpress.XtraEditors.MemoEdit();
 			this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
 			this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
 			this._cmbProject = new DevExpress.XtraEditors.ComboBoxEdit();
 			this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
+			this._btnApply = new DevExpress.XtraEditors.SimpleButton();
 			this._pnlEditor.SuspendLayout();
 			this._grpEdit.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this._dateEdit.Properties.CalendarTimeProperties)).BeginInit();
@@ -36,6 +39,9 @@
 			// 
 			// _pnlEditor
 			// 
+			this._pnlEditor.Controls.Add(this._btnCancel);
+			this._pnlEditor.Controls.Add(this._btnEdit);
+			this._pnlEditor.Controls.Add(this._btnAdd);
 			this._pnlEditor.Controls.Add(this._grpEdit);
 			this._pnlEditor.Controls.Add(this._btnApply);
 			this._pnlEditor.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -43,6 +49,41 @@
 			this._pnlEditor.Name = "_pnlEditor";
 			this._pnlEditor.Size = new System.Drawing.Size(957, 168);
 			this._pnlEditor.TabIndex = 1;
+			// 
+			// _btnCancel
+			// 
+			this._btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this._btnCancel.AutoWidthInLayoutControl = true;
+			this._btnCancel.Location = new System.Drawing.Point(687, 139);
+			this._btnCancel.Name = "_btnCancel";
+			this._btnCancel.Size = new System.Drawing.Size(127, 25);
+			this._btnCancel.TabIndex = 13;
+			this._btnCancel.Text = "Cancel";
+			// 
+			// _btnEdit
+			// 
+			this._btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+			this._btnEdit.AutoWidthInLayoutControl = true;
+			this._btnEdit.Location = new System.Drawing.Point(7, 139);
+			this._btnEdit.Name = "_btnEdit";
+			this._btnEdit.Size = new System.Drawing.Size(127, 25);
+			this._btnEdit.TabIndex = 12;
+			this._btnEdit.Text = "Edit";
+			this._btnEdit.Click += new System.EventHandler(this.OnRecordChangeClick);
+			// 
+			// _btnAdd
+			// 
+			this._btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+			this._btnAdd.AutoWidthInLayoutControl = true;
+			this._btnAdd.Location = new System.Drawing.Point(140, 139);
+			this._btnAdd.Name = "_btnAdd";
+			this._btnAdd.Size = new System.Drawing.Size(127, 25);
+			this._btnAdd.TabIndex = 11;
+			this._btnAdd.Text = "Add new";
+			this._btnAdd.Click += new System.EventHandler(this.OnRecordChangeClick);
 			// 
 			// _grpEdit
 			// 
@@ -71,17 +112,6 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
 			this._dateEdit.Size = new System.Drawing.Size(132, 20);
 			this._dateEdit.TabIndex = 11;
-			// 
-			// _btnApply
-			// 
-			this._btnApply.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-			this._btnApply.AutoWidthInLayoutControl = true;
-			this._btnApply.Location = new System.Drawing.Point(3, 138);
-			this._btnApply.Name = "_btnApply";
-			this._btnApply.Size = new System.Drawing.Size(127, 27);
-			this._btnApply.TabIndex = 10;
-			this._btnApply.Text = "Apply";
 			// 
 			// _spnDays
 			// 
@@ -145,6 +175,17 @@
 			this.labelControl2.TabIndex = 4;
 			this.labelControl2.Text = "Project";
 			// 
+			// _btnApply
+			// 
+			this._btnApply.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this._btnApply.AutoWidthInLayoutControl = true;
+			this._btnApply.Location = new System.Drawing.Point(820, 139);
+			this._btnApply.Name = "_btnApply";
+			this._btnApply.Size = new System.Drawing.Size(127, 25);
+			this._btnApply.TabIndex = 10;
+			this._btnApply.Text = "Apply";
+			// 
 			// Editor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -175,5 +216,8 @@
 		private System.Windows.Forms.GroupBox _grpEdit;
 		private DevExpress.XtraEditors.SimpleButton _btnApply;
 		private DevExpress.XtraEditors.DateEdit _dateEdit;
+		private DevExpress.XtraEditors.SimpleButton _btnEdit;
+		private DevExpress.XtraEditors.SimpleButton _btnAdd;
+		private DevExpress.XtraEditors.SimpleButton _btnCancel;
 	}
 }

@@ -1,8 +1,8 @@
 using LiteDB;
-using SQLAccessor.Interfaces;
-using SQLAccessor.Serializable;
+using Storage.Interfaces;
+using Storage.Serializable;
 
-namespace SQLAccessor.Contexts
+namespace Storage.Contexts
 {
 	public class LiteDbRepositoryContext : IRepositoryContext<LiteDatabase>
 	{

@@ -139,7 +139,6 @@
 			this._memoDesc.Properties.Appearance.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
 			this._memoDesc.Size = new System.Drawing.Size(944, 87);
 			this._memoDesc.TabIndex = 9;
-			this._memoDesc.EditValueChanged += new System.EventHandler(this._memoDesc_EditValueChanged);
 			// 
 			// labelControl1
 			// 

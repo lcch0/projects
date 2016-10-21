@@ -13,6 +13,12 @@ namespace Storage.Contexts
 		public LiteDbRepositoryContext(string path)
 		{
 			_connection = new LiteDatabase(path);
+
+			BsonMapper.Global.Entity<Activity>().Id(x => x.Id);
+			BsonMapper.Global.Entity<Project>().Id(x => x.Id);
+			BsonMapper.Global.Entity<User>().Id(x => x.Id);
+			BsonMapper.Global.Entity<Draft>().Id(x => x.Id);
+
 			BsonMapper.Global.Entity<Activity>().DbRef(x => x.Project, new Project().TableName);
 			BsonMapper.Global.Entity<Activity>().DbRef(x => x.User, new User().TableName);
 

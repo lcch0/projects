@@ -13,12 +13,13 @@ namespace Logic.Models
 
 		public ProjectModel(Project project)
 		{
+			Id = project.Id;
 			ProjectType = GetProjectType(project.ProjectType);
 		}
 
+	    public int Id { get; set; }
 		public eType ProjectType { get; set; }
-
-	    public string ProjectDesc => GetProjectDesc(ProjectType);
+		public string ProjectDesc => GetProjectDesc(ProjectType);
 
 	    public static string GetProjectDesc(eType projectType)
 	    {
@@ -55,6 +56,15 @@ namespace Logic.Models
 	    public override string ToString()
 	    {
 		    return GetProjectDesc(ProjectType);
+	    }
+
+	    public Project GetStorageObject()
+	    {
+		    return new Project
+		    {
+			    Id = Id,
+				ProjectType = (int)ProjectType
+		    };
 	    }
     }
 }

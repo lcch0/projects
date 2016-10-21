@@ -37,7 +37,8 @@ namespace Logic.ViewModels
 		{
 			if (Model.Settings == null)
 			{
-				DummyLoad();
+				GenerateSettings();
+				GenerateDefaultData();
 				return;
 			}
 
@@ -60,9 +61,14 @@ namespace Logic.ViewModels
 			}
 			catch (Exception ex)
 			{
-				DummyLoad();
+				GenerateDefaultData();
 				throw;
 			}
+		}
+
+		private void GenerateSettings()
+		{
+			Model.Settings = new Settings();
 		}
 
 		private void LoadProjects(LiteDbSerializer context)
@@ -73,6 +79,10 @@ namespace Logic.ViewModels
 				var model = new ProjectModel(project);
 				Model.Projects.Add(model);
 			}
+
+			if (Model.Projects.Count < 1)
+				GenerateDefaultProjects();
+
 		}
 
 		private void LoadUsers(LiteDbSerializer context)
@@ -83,6 +93,10 @@ namespace Logic.ViewModels
 				var model = new UserModel(user);
 				Model.Users.Add(model);
 			}
+
+			Model.SelectedUser = Model.Users.Find(u => u.Name.Equals(Model.Settings.UserName, StringComparison.OrdinalIgnoreCase));
+			if(Model.SelectedUser == null)
+				Model.SelectedUser = new UserModel {Name = Model.Settings?.UserName ?? "No user"};
 		}
 
 		private void LoadActivities(LiteDbSerializer context)
@@ -98,11 +112,9 @@ namespace Logic.ViewModels
 			}
 		}
 		
-		private void DummyLoad()
+		private void GenerateDefaultData()
 		{
-			var p = new Project {ProjectType = (int) ProjectModel.eType.Design};
-			var pmodel = new ProjectModel(p);
-			Model.Projects.Add(pmodel);
+			var p = GenerateDefaultProjects();
 
 			var user = new User {Name = "No user"};
 			var umodel = new UserModel(user);
@@ -112,11 +124,49 @@ namespace Logic.ViewModels
 			{
 				Project = p,
 				User = user,
-				Date = DateTime.Now - TimeSpan.FromDays(7),
+				Date = DateTime.Now,
 				Days = 5
 			};
 
 			Model.Activities.Add(new ActivityModel(e));
+
+			using (var context = new LiteDbSerializer(Model.Settings.ConnectionStr))
+			{
+				foreach (var model in Model.Projects)
+				{
+					context.AddRecord(model.GetStorageObject());
+				}
+
+				foreach (var model in Model.Users)
+				{
+					context.AddRecord(model.GetStorageObject());
+				}
+
+				foreach (var model in Model.Activities)
+				{
+					context.AddRecord(model.GetStorageObject());
+				}
+			}
+		}
+
+		private Project GenerateDefaultProjects()
+		{
+			Project result = null;
+			var p = new Project {ProjectType = (int) ProjectModel.eType.Design};
+			var pmodel = new ProjectModel(p);
+			Model.Projects.Add(pmodel);
+
+			result = p;
+
+			p = new Project {ProjectType = (int) ProjectModel.eType.Mobile};
+			pmodel = new ProjectModel(p);
+			Model.Projects.Add(pmodel);
+
+			p = new Project {ProjectType = (int) ProjectModel.eType.Unity};
+			pmodel = new ProjectModel(p);
+			Model.Projects.Add(pmodel);
+
+			return result;
 		}
 	}
 }

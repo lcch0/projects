@@ -9,7 +9,7 @@ namespace Storage.Serializers
 	/// <summary>
 	/// 
 	/// </summary>
-	public class LiteDbSerializer : IDisposable// where T : class, IIdRecord, new()
+	public class LiteDbSerializer : IDisposable
 	{
 		private readonly IRepositoryContext<LiteDatabase> _context;
 
@@ -18,7 +18,7 @@ namespace Storage.Serializers
 			_context = new LiteDbRepositoryContext(path);
 		}
 
-		public IEnumerable<T> GetRecords<T>(int id = -1) where T : IIdRecord, new()
+		public IEnumerable<T> GetRecords<T>(int id = 0) where T : IIdRecord, new()
 		{
 			return GetRecords<T>(id, null);
 		}
@@ -28,7 +28,7 @@ namespace Storage.Serializers
 			if (collection == null)
 				collection = GetCollection<T>();
 
-			if (id > -1)
+			if (id > 0)
 			{
 				return new List<T> { collection.FindById(id) };
 			}
@@ -47,24 +47,30 @@ namespace Storage.Serializers
 			return collection.Include(x => x.TableName);
 		}
 
-		public int AddRecord<T>(T doc) where T : IIdRecord, new()
+		public int AddRecord<T>(T doc, LiteCollection<T> collection = null) where T : IIdRecord, new()
 		{
-			var c = _context.Connection.GetCollection<T>(doc.TableName);
-			c.Insert(doc);
+			if (collection == null)
+				collection = GetCollection<T>();
+			
+			collection.Insert(doc);
 			return doc.Id;
 		}
 
-		public int UpdateRecord<T>(T doc) where T : IIdRecord, new()
+		public int UpdateRecord<T>(T doc, LiteCollection<T> collection = null) where T : IIdRecord, new()
 		{
-			var c = _context.Connection.GetCollection<T>(doc.TableName);
-			c.Update(doc);
+			if (collection == null)
+				collection = GetCollection<T>();
+
+			collection.Update(doc);
 			return doc.Id;
 		}
 
-		public int DeleteRecord<T>(T doc) where T : IIdRecord, new()
+		public int DeleteRecord<T>(T doc, LiteCollection<T> collection = null) where T : IIdRecord, new()
 		{
-			var c = _context.Connection.GetCollection<T>(doc.TableName);
-			c.Delete(doc.Id);
+			if (collection == null)
+				collection = GetCollection<T>();
+
+			collection.Delete(doc.Id);
 			return doc.Id;
 		}
 

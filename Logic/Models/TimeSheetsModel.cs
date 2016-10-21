@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Logic.Models.mvvm;
-using Storage.Serializable;
 
 namespace Logic.Models
 {

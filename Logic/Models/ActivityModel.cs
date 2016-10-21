@@ -10,6 +10,7 @@ namespace Logic.Models
 	{
 		public ActivityModel(Activity activity)
 		{
+			Id = activity.Id;
 			Date = activity.Date;
 			Days = activity.Days;
 			Description = activity.Desc;
@@ -23,18 +24,41 @@ namespace Logic.Models
 			
 		}
 
-		public DateTime Date { get; set; }
+		public int Id { get; set; }
+		public DateTime Date { get; set; } = DateTime.Now;
 		public float Days { get; set; }
-		public string Description { get; set; }
-		public List<DraftModel> Drafts { get; set; }
+		public string Description { get; set; } = string.Empty;
+		public List<DraftModel> Drafts { get; set; } = new List<DraftModel>();
 
 		public int Week
 			=> CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(Date, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
 
-		public ProjectModel.eType ProjectType { get; set; }
+		public ProjectModel.eType ProjectType { get; set; } = ProjectModel.eType.Design;
 
 		public string ProjectDesc => ProjectModel.GetProjectDesc(ProjectType);
 
-		public string UserName { get; set; }
+		public string UserName { get; set; } = string.Empty;
+
+		public void CopyTo(ActivityModel newActivity)
+		{
+			newActivity.Date = Date;
+			newActivity.Days = Days;
+			newActivity.Description = Description;
+			newActivity.Drafts = new List<DraftModel>(Drafts);
+			newActivity.ProjectType = ProjectType;
+			newActivity.UserName = UserName;
+		}
+
+		public Activity GetStorageObject()
+		{
+			return new Activity
+			{
+				Id = Id,
+				Date = Date,
+				Days = Days,
+				Desc = Description,
+				Drafts = Drafts.Select(d => new Draft {Id = d.Order, Desc = d.Text}).ToList()
+			};
+		}
 	}
 }

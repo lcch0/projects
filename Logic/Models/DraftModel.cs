@@ -6,7 +6,7 @@ namespace Logic.Models
     {
 		public DraftModel(Draft draft)
 		{
-			Order = draft?.Id ?? -1;
+			Order = draft?.Id ?? 0;
 			Text = draft?.Desc ?? string.Empty;
 		}
 

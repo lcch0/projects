@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic", "Logic\Logic.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage", "Storage\Storage.csproj", "{170CA7AB-3B21-4269-907B-52E546D24865}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeSheetsSimple", "TimeSheetsSimple\TimeSheetsSimple.csproj", "{CEB3C977-A1B2-424F-9767-45D7C00492DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{170CA7AB-3B21-4269-907B-52E546D24865}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{170CA7AB-3B21-4269-907B-52E546D24865}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{170CA7AB-3B21-4269-907B-52E546D24865}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEB3C977-A1B2-424F-9767-45D7C00492DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEB3C977-A1B2-424F-9767-45D7C00492DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEB3C977-A1B2-424F-9767-45D7C00492DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEB3C977-A1B2-424F-9767-45D7C00492DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -6,9 +6,14 @@ namespace Logic.Models
     {
 		public enum eType
 		{
-			Design = 0,
-			Mobile,
-			Unity
+			Design = 1,
+			Mobile = 2,
+			Unity = 3
+		}
+
+		public ProjectModel()
+		{
+
 		}
 
 		public ProjectModel(Project project)

@@ -83,6 +83,7 @@ namespace Logic.ViewModels
 			if (Model.Projects.Count < 1)
 				GenerateDefaultProjects();
 
+			Model.SelectedProject = Model.Projects[0];
 		}
 
 		private void LoadUsers(LiteDbSerializer context)
@@ -92,6 +93,12 @@ namespace Logic.ViewModels
 			{
 				var model = new UserModel(user);
 				Model.Users.Add(model);
+			}
+
+			if(Model.Users.Count == 0)
+			{
+				var user = new UserModel { Id = 1, Name = Model.Settings.UserName };
+				Model.Users.Add(user);
 			}
 
 			Model.SelectedUser = Model.Users.Find(u => u.Name.Equals(Model.Settings.UserName, StringComparison.OrdinalIgnoreCase));
@@ -114,21 +121,22 @@ namespace Logic.ViewModels
 		
 		private void GenerateDefaultData()
 		{
-			var p = GenerateDefaultProjects();
+			GenerateDefaultProjects();
 
-			var user = new User {Name = "No user"};
-			var umodel = new UserModel(user);
+			var umodel = new UserModel { Id = 1, Name = "No user" };
 			Model.Users.Add(umodel);
 
-			var e = new Activity
+			var a = new ActivityModel
 			{
-				Project = p,
-				User = user,
+				Id = 1,
 				Date = DateTime.Now,
-				Days = 5
+				Days = 0,
+				Description = string.Empty,
+				ProjectType = ProjectModel.eType.Design,
+				UserName = umodel.Name
 			};
 
-			Model.Activities.Add(new ActivityModel(e));
+			Model.Activities.Add(a);
 
 			using (var context = new LiteDbSerializer(Model.Settings.ConnectionStr))
 			{
@@ -149,24 +157,16 @@ namespace Logic.ViewModels
 			}
 		}
 
-		private Project GenerateDefaultProjects()
+		private void GenerateDefaultProjects()
 		{
-			Project result = null;
-			var p = new Project {ProjectType = (int) ProjectModel.eType.Design};
-			var pmodel = new ProjectModel(p);
+			var pmodel = new ProjectModel { Id = 1, ProjectType = ProjectModel.eType.Design };
 			Model.Projects.Add(pmodel);
 
-			result = p;
-
-			p = new Project {ProjectType = (int) ProjectModel.eType.Mobile};
-			pmodel = new ProjectModel(p);
+			pmodel = new ProjectModel { Id = 2, ProjectType = ProjectModel.eType.Mobile };
 			Model.Projects.Add(pmodel);
 
-			p = new Project {ProjectType = (int) ProjectModel.eType.Unity};
-			pmodel = new ProjectModel(p);
+			pmodel = new ProjectModel { Id = 3, ProjectType = ProjectModel.eType.Unity };
 			Model.Projects.Add(pmodel);
-
-			return result;
 		}
 	}
 }

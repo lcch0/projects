@@ -81,7 +81,7 @@ namespace Logic.ViewModels
 			}
 
 			if (Model.Projects.Count < 1)
-				GenerateDefaultProjects();
+				GenerateDefaultProjects(context);
 
 			Model.SelectedProject = Model.Projects[0];
 		}
@@ -99,6 +99,7 @@ namespace Logic.ViewModels
 			{
 				var user = new UserModel { Id = 1, Name = Model.Settings.UserName };
 				Model.Users.Add(user);
+				context.AddRecord(user.GetStorageObject());
 			}
 
 			Model.SelectedUser = Model.Users.Find(u => u.Name.Equals(Model.Settings.UserName, StringComparison.OrdinalIgnoreCase));
@@ -121,52 +122,53 @@ namespace Logic.ViewModels
 		
 		private void GenerateDefaultData()
 		{
-			GenerateDefaultProjects();
-
-			var umodel = new UserModel { Id = 1, Name = "No user" };
-			Model.Users.Add(umodel);
-
-			var a = new ActivityModel
-			{
-				Id = 1,
-				Date = DateTime.Now,
-				Days = 0,
-				Description = string.Empty,
-				ProjectType = ProjectModel.eType.Design,
-				UserName = umodel.Name
-			};
-
-			Model.Activities.Add(a);
-
 			using (var context = new LiteDbSerializer(Model.Settings.ConnectionStr))
-			{
+			{ 
+				GenerateDefaultProjects(context); 
+
 				foreach (var model in Model.Projects)
 				{
-					context.AddRecord(model.GetStorageObject());
+					model.Id = context.AddRecord(model.GetStorageObject());
 				}
+
+				var umodel = new UserModel { Id = 1, Name = "No user" };
+				Model.Users.Add(umodel);
 
 				foreach (var model in Model.Users)
 				{
-					context.AddRecord(model.GetStorageObject());
+					model.Id = context.AddRecord(model.GetStorageObject());
 				}
+
+				var a = new ActivityModel
+				{
+					Id = 1,
+					Date = DateTime.Now,
+					Days = 0,
+					Description = string.Empty,
+					ProjectType = ProjectModel.eType.Design,
+					UserName = umodel.Name
+				};
 
 				foreach (var model in Model.Activities)
 				{
-					context.AddRecord(model.GetStorageObject());
+					model.Id = context.AddRecord(model.GetStorageObject());
 				}
 			}
 		}
 
-		private void GenerateDefaultProjects()
+		private void GenerateDefaultProjects(LiteDbSerializer context)
 		{
 			var pmodel = new ProjectModel { Id = 1, ProjectType = ProjectModel.eType.Design };
 			Model.Projects.Add(pmodel);
+			context.AddRecord(pmodel.GetStorageObject());
 
 			pmodel = new ProjectModel { Id = 2, ProjectType = ProjectModel.eType.Mobile };
 			Model.Projects.Add(pmodel);
+			context.AddRecord(pmodel.GetStorageObject());
 
 			pmodel = new ProjectModel { Id = 3, ProjectType = ProjectModel.eType.Unity };
 			Model.Projects.Add(pmodel);
+			context.AddRecord(pmodel.GetStorageObject());
 		}
 	}
 }

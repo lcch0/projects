@@ -100,7 +100,6 @@ namespace Logic.ViewModels
 				}
 
 				SelectedActivity = EditActivity;
-				Model.RaisePropertyChanged(this, () => Model.SelectedActivity);
 			}
 			finally
 			{

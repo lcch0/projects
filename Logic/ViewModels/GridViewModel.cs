@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Input;
 using Logic.Commands;
 using Logic.Models;
+using Logic.Models.mvvm;
 
 namespace Logic.ViewModels
 {
@@ -27,6 +29,12 @@ namespace Logic.ViewModels
 		private void SelectionChanged(ActivityModel obj)
 		{
 			Model.SelectedActivity = obj;
+		}
+
+		protected override void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (sender != this && e.PropertyName == PropertySupport.ExtractPropertyName(() => Model.Activities))
+				base.OnModelPropertyChanged(sender, e);
 		}
 	}
 }

@@ -87,10 +87,16 @@ namespace Logic.ViewModels
 
 					var collection = context.GetCollection<Activity>();
 					collection = collection.Include(x => x.Project).Include(x => x.User);
-					EditActivity.Id = 
-						activity.Id == 0 
-						? context.AddRecord(activity, collection) 
-						: context.UpdateRecord(activity, collection);
+					if (activity.Id == 0)
+					{
+						EditActivity.Id = context.AddRecord(activity, collection);
+						Model.Activities.Add(EditActivity);
+						Model.RaisePropertyChanged(this, () => Model.Activities);
+					}
+					else
+					{
+						EditActivity.Id = context.UpdateRecord(activity, collection);
+					} 
 				}
 
 				SelectedActivity = EditActivity;

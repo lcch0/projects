@@ -18,7 +18,7 @@ namespace TimeSheetsSimple
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._gridControl = new DataGrid();
+			this._gridControl = new DataGridView();
 			((System.ComponentModel.ISupportInitialize)(this._gridControl)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -44,6 +44,6 @@ namespace TimeSheetsSimple
 
 		#endregion
 
-		private DataGrid _gridControl;
+		private DataGridView _gridControl;
 	}
 }

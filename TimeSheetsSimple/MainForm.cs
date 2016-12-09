@@ -54,5 +54,10 @@ namespace TimeSheetsSimple
 			}
 			base.Dispose(disposing);
 		}
+
+		private void quitToolStripMenuItem1_Click(object sender, EventArgs e)
+		{
+			Model.OnQuit?.Invoke();
+		}
 	}
 }

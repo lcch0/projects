@@ -11,6 +11,7 @@ namespace Logic.ViewModels
 {
 	public class MainFormViewModel : BaseViewModel
 	{
+		public Action OnQuit { get; set; }
 		public ICommand LoadSettingsCommand { get; set; }
 		public ICommand LoadDBCommand { get; set; }
 		public ICommand StartTimersCommand { get; set; }
@@ -57,6 +58,13 @@ namespace Logic.ViewModels
 				{
 					Model.Activities = Model.Activities.OrderByDescending(e => e.Date).ToList();
 					Model.SelectedActivity = Model.Activities[0];
+					var user = Model.Users.Find(u => u.Name.Equals(Model.SelectedActivity.UserName, StringComparison.OrdinalIgnoreCase));
+					if (user != null)
+						Model.SelectedUser = user;
+
+					var project = Model.Projects.Find(u => u.ProjectType == Model.SelectedActivity.ProjectType);
+					if (project != null)
+						Model.SelectedProject = project;
 				}
 			}
 			catch (Exception ex)
@@ -84,6 +92,15 @@ namespace Logic.ViewModels
 				GenerateDefaultProjects(context);
 
 			Model.SelectedProject = Model.Projects[0];
+
+			foreach (var item in Model.Projects)
+			{
+				if(item.ProjectDesc.Contains(Model.Settings.Project))
+				{
+					Model.SelectedProject = item;
+					break;
+				}
+			}
 		}
 
 		private void LoadUsers(LiteDbSerializer context)

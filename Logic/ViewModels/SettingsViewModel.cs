@@ -15,6 +15,54 @@ namespace Logic.ViewModels
 			set { Model.Settings = value; }
 		}
 
+		public string UserName
+		{
+			get { return Model.Settings.UserName; }
+			set
+			{
+				if (Model.Settings.UserName == value)
+					return;
+
+				Model.Settings.UserName = value;
+			}
+		}
+
+		public string Password
+		{
+			get { return Model.Settings.Password; }
+			set
+			{
+				if (Model.Settings.Password == value)
+					return;
+
+				Model.Settings.Password = value;
+			}
+		}
+
+		public string DbPath
+		{
+			get { return Model.Settings.Path; }
+			set
+			{
+				if (Model.Settings.Path == value)
+					return;
+
+				Model.Settings.Path = value;
+			}
+		}
+
+		public string Project
+		{
+			get { return Model.Settings.Project; }
+			set
+			{
+				if (Model.Settings.Project == value)
+					return;
+
+				Model.Settings.Project = value;
+			}
+		}
+
 		public ICommand SaveSettingsCommand { get; set; }
 		public ICommand LoadSettingsCommand { get; set; }
 

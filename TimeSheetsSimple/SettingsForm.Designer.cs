@@ -18,38 +18,37 @@ namespace TimeSheetsSimple
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._txtUsr = new TextBox();
-			this._txtPwd = new TextBox();
-			this._txtConn = new TextBox();
-			this.labelControl1 = new Label();
-			this.labelControl2 = new Label();
-			this.labelControl3 = new Label();
-			this._btnOk = new Button();
-			this._btnCancel = new Button();
-			((System.ComponentModel.ISupportInitialize)(this._txtUsr)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this._txtPwd)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this._txtConn)).BeginInit();
+			this._txtUsr = new System.Windows.Forms.TextBox();
+			this._txtPwd = new System.Windows.Forms.TextBox();
+			this._txtConn = new System.Windows.Forms.TextBox();
+			this.labelControl1 = new System.Windows.Forms.Label();
+			this.labelControl2 = new System.Windows.Forms.Label();
+			this.labelControl3 = new System.Windows.Forms.Label();
+			this._btnOk = new System.Windows.Forms.Button();
+			this._btnCancel = new System.Windows.Forms.Button();
+			this.label1 = new System.Windows.Forms.Label();
+			this._txtProj = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// _txtUsr
 			// 
-			this._txtUsr.Location = new System.Drawing.Point(103, 10);
+			this._txtUsr.Location = new System.Drawing.Point(91, 10);
 			this._txtUsr.Name = "_txtUsr";
-			this._txtUsr.Size = new System.Drawing.Size(497, 20);
+			this._txtUsr.Size = new System.Drawing.Size(509, 20);
 			this._txtUsr.TabIndex = 0;
 			// 
 			// _txtPwd
 			// 
-			this._txtPwd.Location = new System.Drawing.Point(103, 40);
+			this._txtPwd.Location = new System.Drawing.Point(91, 59);
 			this._txtPwd.Name = "_txtPwd";
-			this._txtPwd.Size = new System.Drawing.Size(497, 20);
+			this._txtPwd.Size = new System.Drawing.Size(509, 20);
 			this._txtPwd.TabIndex = 1;
 			// 
 			// _txtConn
 			// 
-			this._txtConn.Location = new System.Drawing.Point(103, 70);
+			this._txtConn.Location = new System.Drawing.Point(91, 84);
 			this._txtConn.Name = "_txtConn";
-			this._txtConn.Size = new System.Drawing.Size(497, 20);
+			this._txtConn.Size = new System.Drawing.Size(509, 20);
 			this._txtConn.TabIndex = 2;
 			// 
 			// labelControl1
@@ -62,23 +61,23 @@ namespace TimeSheetsSimple
 			// 
 			// labelControl2
 			// 
-			this.labelControl2.Location = new System.Drawing.Point(13, 43);
+			this.labelControl2.Location = new System.Drawing.Point(13, 62);
 			this.labelControl2.Name = "labelControl2";
-			this.labelControl2.Size = new System.Drawing.Size(46, 13);
+			this.labelControl2.Size = new System.Drawing.Size(58, 13);
 			this.labelControl2.TabIndex = 4;
 			this.labelControl2.Text = "Password";
 			// 
 			// labelControl3
 			// 
-			this.labelControl3.Location = new System.Drawing.Point(13, 73);
+			this.labelControl3.Location = new System.Drawing.Point(13, 87);
 			this.labelControl3.Name = "labelControl3";
-			this.labelControl3.Size = new System.Drawing.Size(84, 13);
+			this.labelControl3.Size = new System.Drawing.Size(72, 13);
 			this.labelControl3.TabIndex = 5;
 			this.labelControl3.Text = "Connection string";
 			// 
 			// _btnOk
 			// 
-			this._btnOk.Location = new System.Drawing.Point(13, 103);
+			this._btnOk.Location = new System.Drawing.Point(13, 115);
 			this._btnOk.Name = "_btnOk";
 			this._btnOk.Size = new System.Drawing.Size(75, 23);
 			this._btnOk.TabIndex = 6;
@@ -87,19 +86,36 @@ namespace TimeSheetsSimple
 			// 
 			// _btnCancel
 			// 
-			this._btnCancel.Location = new System.Drawing.Point(525, 103);
+			this._btnCancel.Location = new System.Drawing.Point(525, 115);
 			this._btnCancel.Name = "_btnCancel";
 			this._btnCancel.Size = new System.Drawing.Size(75, 23);
 			this._btnCancel.TabIndex = 7;
 			this._btnCancel.Text = "Cancel";
 			this._btnCancel.Click += new System.EventHandler(this.OnCancelClick);
 			// 
+			// label1
+			// 
+			this.label1.Location = new System.Drawing.Point(13, 37);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(75, 13);
+			this.label1.TabIndex = 9;
+			this.label1.Text = "Project";
+			// 
+			// _txtProj
+			// 
+			this._txtProj.Location = new System.Drawing.Point(91, 34);
+			this._txtProj.Name = "_txtProj";
+			this._txtProj.Size = new System.Drawing.Size(509, 20);
+			this._txtProj.TabIndex = 8;
+			// 
 			// SettingsForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(607, 132);
+			this.ClientSize = new System.Drawing.Size(607, 142);
 			this.ControlBox = false;
+			this.Controls.Add(this.label1);
+			this.Controls.Add(this._txtProj);
 			this.Controls.Add(this._btnCancel);
 			this.Controls.Add(this._btnOk);
 			this.Controls.Add(this.labelControl3);
@@ -111,9 +127,6 @@ namespace TimeSheetsSimple
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 			this.Name = "SettingsForm";
 			this.Text = "Settings";
-			((System.ComponentModel.ISupportInitialize)(this._txtUsr)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this._txtPwd)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this._txtConn)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -129,5 +142,7 @@ namespace TimeSheetsSimple
 		private Label labelControl3;
 		private Button _btnOk;
 		private Button _btnCancel;
+		private Label label1;
+		private TextBox _txtProj;
 	}
 }

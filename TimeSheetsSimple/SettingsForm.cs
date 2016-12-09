@@ -17,14 +17,20 @@ namespace TimeSheetsSimple
 		public void InitializeModel(TimeSheetsModel model)
 		{
 			Model = new SettingsViewModel(model);
-			
-			_txtUsr.DataBindings.Add("EditValue", Model.Settings, "UserName", true, DataSourceUpdateMode.OnPropertyChanged);
-			_txtPwd.DataBindings.Add("EditValue", Model.Settings, "Password", true, DataSourceUpdateMode.OnPropertyChanged);
-			_txtConn.DataBindings.Add("EditValue", Model.Settings, "ConnectionStr", true, DataSourceUpdateMode.OnPropertyChanged);
+
+			_txtUsr.Text = Model.UserName;
+			_txtPwd.Text = Model.Password;
+			_txtConn.Text = Model.DbPath;
+			_txtProj.Text = Model.Project;
 		}
 
 		private void OnOkClick(object sender, EventArgs e)
 		{
+			Model.UserName = _txtUsr.Text;
+			Model.Password = _txtPwd.Text;
+			Model.DbPath = _txtConn.Text;
+			Model.Project = _txtProj.Text;
+
 			Model.SaveSettingsCommand.Execute(Model.Settings);	
 			Close();
 		}

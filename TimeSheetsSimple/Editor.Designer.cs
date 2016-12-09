@@ -18,20 +18,21 @@ namespace TimeSheetsSimple
 		private void InitializeComponent()
 		{
 			this._pnlEditor = new System.Windows.Forms.Panel();
-			this._btnCancel = new Button();
-			this._btnEdit = new Button();
-			this._btnAdd = new Button();
-			this._grpEdit = new GroupBox();
-			this._dateEdit = new DateTimePicker();
-			this._spnDays = new NumericUpDown();
-			this._memoDesc = new TextBox();
-			this.labelControl1 = new Label();
-			this.labelControl3 = new Label();
-			this._cmbProject = new ComboBox();
-			this.labelControl2 = new Label();
-			this._btnApply = new Button();
+			this._btnCancel = new System.Windows.Forms.Button();
+			this._btnEdit = new System.Windows.Forms.Button();
+			this._btnAdd = new System.Windows.Forms.Button();
+			this._grpEdit = new System.Windows.Forms.GroupBox();
+			this._dateEdit = new System.Windows.Forms.DateTimePicker();
+			this._spnDays = new System.Windows.Forms.NumericUpDown();
+			this._memoDesc = new System.Windows.Forms.TextBox();
+			this.labelControl1 = new System.Windows.Forms.Label();
+			this.labelControl3 = new System.Windows.Forms.Label();
+			this._cmbProject = new System.Windows.Forms.ComboBox();
+			this.labelControl2 = new System.Windows.Forms.Label();
+			this._btnApply = new System.Windows.Forms.Button();
 			this._pnlEditor.SuspendLayout();
 			this._grpEdit.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this._spnDays)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// _pnlEditor
@@ -97,14 +98,15 @@ namespace TimeSheetsSimple
 			// 
 			// _dateEdit
 			// 
+			this._dateEdit.Format = System.Windows.Forms.DateTimePickerFormat.Short;
 			this._dateEdit.Location = new System.Drawing.Point(112, 19);
 			this._dateEdit.Name = "_dateEdit";
-			this._dateEdit.Size = new System.Drawing.Size(132, 20);
+			this._dateEdit.Size = new System.Drawing.Size(99, 20);
 			this._dateEdit.TabIndex = 11;
 			// 
 			// _spnDays
 			// 
-			this._spnDays.Location = new System.Drawing.Point(591, 19);
+			this._spnDays.Location = new System.Drawing.Point(474, 19);
 			this._spnDays.Name = "_spnDays";
 			this._spnDays.Size = new System.Drawing.Size(49, 20);
 			this._spnDays.TabIndex = 7;
@@ -114,8 +116,8 @@ namespace TimeSheetsSimple
 			this._memoDesc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this._memoDesc.Location = new System.Drawing.Point(3, 45);
-			this._memoDesc.Name = "_memoDesc";
 			this._memoDesc.Multiline = true;
+			this._memoDesc.Name = "_memoDesc";
 			this._memoDesc.Size = new System.Drawing.Size(944, 87);
 			this._memoDesc.TabIndex = 9;
 			// 
@@ -129,24 +131,24 @@ namespace TimeSheetsSimple
 			// 
 			// labelControl3
 			// 
-			this.labelControl3.Location = new System.Drawing.Point(533, 22);
+			this.labelControl3.Location = new System.Drawing.Point(411, 22);
 			this.labelControl3.Name = "labelControl3";
-			this.labelControl3.Size = new System.Drawing.Size(52, 13);
+			this.labelControl3.Size = new System.Drawing.Size(62, 13);
 			this.labelControl3.TabIndex = 5;
 			this.labelControl3.Text = "Time, days";
 			// 
 			// _cmbProject
 			// 
-			this._cmbProject.Location = new System.Drawing.Point(307, 19);
+			this._cmbProject.Location = new System.Drawing.Point(263, 19);
 			this._cmbProject.Name = "_cmbProject";
-			this._cmbProject.Size = new System.Drawing.Size(206, 20);
+			this._cmbProject.Size = new System.Drawing.Size(142, 21);
 			this._cmbProject.TabIndex = 3;
 			// 
 			// labelControl2
 			// 
-			this.labelControl2.Location = new System.Drawing.Point(267, 22);
+			this.labelControl2.Location = new System.Drawing.Point(215, 22);
 			this.labelControl2.Name = "labelControl2";
-			this.labelControl2.Size = new System.Drawing.Size(34, 13);
+			this.labelControl2.Size = new System.Drawing.Size(51, 13);
 			this.labelControl2.TabIndex = 4;
 			this.labelControl2.Text = "Project";
 			// 
@@ -170,6 +172,7 @@ namespace TimeSheetsSimple
 			this._pnlEditor.ResumeLayout(false);
 			this._grpEdit.ResumeLayout(false);
 			this._grpEdit.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this._spnDays)).EndInit();
 			this.ResumeLayout(false);
 
 		}

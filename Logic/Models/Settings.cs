@@ -15,6 +15,8 @@ namespace Logic.Models
 		public string Path { get; set; }
 		[XmlElement("UserName")]
 		public string UserName { get; set; } = "DSN";
+		[XmlElement("Project")]
+		public string Project { get; set; } = "Design";
 		[XmlElement("Password")]
 		public string Password { get; set; } = "";
 		[XmlElement("ConnectionStr")]
@@ -23,7 +25,7 @@ namespace Logic.Models
 		[XmlArrayItem("Timer", typeof(DayTimer))]
 		[XmlArray("Timers")]
 		public List<DayTimer> Timers { get; set; }
-
+		
 		public Settings()
 		{
 			ConnectionStr = GetDefaultDbPath(Environment.CurrentDirectory);
@@ -32,6 +34,7 @@ namespace Logic.Models
 		public void CopyTo(Settings settings)
 		{
 			settings.UserName = UserName;
+			settings.Project = Project;
 			settings.Password = Password;
 			settings.ConnectionStr = ConnectionStr;
 			settings.Timers = Timers;

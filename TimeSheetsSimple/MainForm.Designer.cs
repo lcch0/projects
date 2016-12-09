@@ -18,6 +18,7 @@
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this._pnlEditor = new System.Windows.Forms.Panel();
+			this._editor = new TimeSheetsSimple.Editor();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this._settingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -29,7 +30,6 @@
 			this.lastDraftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this._pnlGrid = new System.Windows.Forms.Panel();
 			this._timeSheetGrid = new TimeSheetsSimple.TimeSheetGrid();
-			this._editor = new TimeSheetsSimple.Editor();
 			this._pnlEditor.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this._pnlGrid.SuspendLayout();
@@ -44,6 +44,14 @@
 			this._pnlEditor.Name = "_pnlEditor";
 			this._pnlEditor.Size = new System.Drawing.Size(1225, 189);
 			this._pnlEditor.TabIndex = 0;
+			// 
+			// _editor
+			// 
+			this._editor.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._editor.Location = new System.Drawing.Point(0, 24);
+			this._editor.Name = "_editor";
+			this._editor.Size = new System.Drawing.Size(1225, 165);
+			this._editor.TabIndex = 0;
 			// 
 			// menuStrip1
 			// 
@@ -69,7 +77,7 @@
 			// _settingsMenuItem
 			// 
 			this._settingsMenuItem.Name = "_settingsMenuItem";
-			this._settingsMenuItem.Size = new System.Drawing.Size(116, 22);
+			this._settingsMenuItem.Size = new System.Drawing.Size(152, 22);
 			this._settingsMenuItem.Text = "Settings";
 			this._settingsMenuItem.Click += new System.EventHandler(this.OnSettingsMenu);
 			// 
@@ -79,7 +87,7 @@
             this.commaSeparatedFileCsvToolStripMenuItem,
             this.mSExcelXlsxToolStripMenuItem});
 			this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-			this.quitToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+			this.quitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.quitToolStripMenuItem.Text = "Export";
 			// 
 			// commaSeparatedFileCsvToolStripMenuItem
@@ -97,8 +105,9 @@
 			// quitToolStripMenuItem1
 			// 
 			this.quitToolStripMenuItem1.Name = "quitToolStripMenuItem1";
-			this.quitToolStripMenuItem1.Size = new System.Drawing.Size(116, 22);
+			this.quitToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
 			this.quitToolStripMenuItem1.Text = "Quit";
+			this.quitToolStripMenuItem1.Click += new System.EventHandler(this.quitToolStripMenuItem1_Click);
 			// 
 			// draftsToolStripMenuItem
 			// 
@@ -131,14 +140,6 @@
 			this._timeSheetGrid.Name = "_timeSheetGrid";
 			this._timeSheetGrid.Size = new System.Drawing.Size(1225, 489);
 			this._timeSheetGrid.TabIndex = 0;
-			// 
-			// _editor
-			// 
-			this._editor.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._editor.Location = new System.Drawing.Point(0, 24);
-			this._editor.Name = "_editor";
-			this._editor.Size = new System.Drawing.Size(1225, 165);
-			this._editor.TabIndex = 0;
 			// 
 			// MainForm
 			// 

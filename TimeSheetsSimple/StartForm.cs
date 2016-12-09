@@ -29,6 +29,7 @@ namespace TimeSheetsSimple
 				var model = new TimeSheetsModel();
 
 				Model = new MainFormViewModel(model);
+				Model.OnQuit = CloseApp;
 				Model.LoadSettingsCommand.Execute(Settings.GetDefaultPath(Environment.CurrentDirectory));
 				Model.LoadDBCommand.Execute(Model);
 				Model.StartTimersCommand.Execute(Model);
@@ -75,6 +76,11 @@ namespace TimeSheetsSimple
 		}
 
 		private void _exitMenu_Click(object sender, EventArgs e)
+		{
+			CloseApp();
+		}
+
+		private void CloseApp()
 		{
 			_mainForm?.Dispose();
 			Close();

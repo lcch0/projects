@@ -48,6 +48,7 @@
     <Compile Include="Models\ProjectModel.cs" />
     <Compile Include="Models\DayTimer.cs" />
     <Compile Include="Models\ActivityModel.cs" />
+    <Compile Include="ViewModels\DraftViewModel.cs" />
     <Compile Include="ViewModels\GridViewModel.cs" />
     <Compile Include="Models\mvvm\ObservableObject.cs" />
     <Compile Include="Models\mvvm\PropertySupport.cs" />

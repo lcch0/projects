@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using Storage.Serializable;
 
 namespace Logic.Models
@@ -28,6 +29,7 @@ namespace Logic.Models
 		public DateTime Date { get; set; } = DateTime.Now;
 		public float Days { get; set; }
 		public string Description { get; set; } = string.Empty;
+
 		public List<DraftModel> Drafts { get; set; } = new List<DraftModel>();
 
 		public int Week
@@ -59,6 +61,21 @@ namespace Logic.Models
 				Desc = Description,
 				Drafts = Drafts.Select(d => new Draft {Id = d.Order, Desc = d.Text}).ToList()
 			};
+		}
+
+		public string GetDescription(bool isFull)
+		{
+			if (!isFull)
+				return Description;
+
+			var sb = new StringBuilder($"{Description}{Environment.NewLine}{Environment.NewLine}");
+
+			foreach (var draft in Drafts)
+			{
+				sb.AppendLine(draft.Text);
+			}
+
+			return sb.ToString();
 		}
 	}
 }

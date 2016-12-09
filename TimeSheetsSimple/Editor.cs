@@ -26,6 +26,9 @@ namespace TimeSheetsSimple
 
 		private void OnApplyClick(object sender, System.EventArgs e)
 		{
+			if (!Model.IsInEditMode)
+				return;
+
 			try
 			{
 				if (sender == _btnCancel)
@@ -67,7 +70,7 @@ namespace TimeSheetsSimple
 			{
 				_dateEdit.Value = selectedActivity.Date;
 				_spnDays.Text = selectedActivity.Days.ToString(CultureInfo.InvariantCulture);
-				_memoDesc.Text = selectedActivity.Description;
+				_memoDesc.Text = Model.GetDescription();
 
 				var proj = Model.Projects.Find(p => p.ProjectType == selectedActivity.ProjectType);
 				_cmbProject.SelectedItem = proj;

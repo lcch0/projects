@@ -24,6 +24,9 @@ namespace Logic.ViewModels
 
 		private void OnAddNewDraft(string text)
 		{
+			if (string.IsNullOrEmpty(text))
+				return;
+
 			Text = text;
 			var now = DateTime.Now;
 			DateTime weekStart = GetWeekDay(now, 1);
@@ -58,7 +61,7 @@ namespace Logic.ViewModels
 				collection = collection.Include(x => x.Project).Include(x => x.User);
 				if (activity.Id == 0)
 				{
-					context.AddRecord(activity, collection);
+					activityModel.Id = context.AddRecord(activity, collection);
 					Model.RaisePropertyChanged(this, () => Model.Activities);
 				}
 				else
@@ -84,13 +87,31 @@ namespace Logic.ViewModels
 				Date = DateTime.Now,
 				Drafts = new List<DraftModel>(),
 				Days = 5,
-				ProjectType = ProjectModel.eType.Design,
+				ProjectType = GetDefaultProject(),
 				UserName = Model.Settings?.UserName
 			};
 
 			Activities.Add(a);
 
 			return a;
+		}
+
+		private ProjectModel.eType GetDefaultProject()
+		{
+			var projStr = Model.Settings.Project;
+			if(string.IsNullOrEmpty(projStr))
+				return ProjectModel.eType.Design;
+
+			if(ProjectModel.eType.Design.ToString().Equals(projStr, StringComparison.OrdinalIgnoreCase))
+				return ProjectModel.eType.Design;
+
+			if (ProjectModel.eType.Mobile.ToString().Equals(projStr, StringComparison.OrdinalIgnoreCase))
+				return ProjectModel.eType.Mobile;
+
+			if (ProjectModel.eType.Unity.ToString().Equals(projStr, StringComparison.OrdinalIgnoreCase))
+				return ProjectModel.eType.Unity;
+
+			return ProjectModel.eType.Design;
 		}
 
 		private DateTime GetWeekDay(DateTime date, int day)

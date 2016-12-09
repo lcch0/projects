@@ -65,6 +65,14 @@ namespace Logic.ViewModels
 			ApplyActivityChangedCommand = new RelayCommand<ActivityModel>(ApplyChanges);
 		}
 
+		public string GetDescription()
+		{
+			if (SelectedActivity == null)
+				return string.Empty;
+
+			return SelectedActivity.GetDescription(!IsInEditMode);
+		}
+
 		private void ApplyChanges(ActivityModel obj)
 		{
 			Activity activity = GetActivity();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Input;
 using Logic.Commands;
@@ -62,6 +63,8 @@ namespace Logic.ViewModels
 				Model.Settings.Project = value;
 			}
 		}
+
+		public List<DayTimer> DayTimers => Settings.Timers;
 
 		public ICommand SaveSettingsCommand { get; set; }
 		public ICommand LoadSettingsCommand { get; set; }

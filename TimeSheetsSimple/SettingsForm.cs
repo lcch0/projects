@@ -22,6 +22,13 @@ namespace TimeSheetsSimple
 			_txtPwd.Text = Model.Password;
 			_txtConn.Text = Model.DbPath;
 			_txtProj.Text = Model.Project;
+
+			timerUserControl1.Time = Model.DayTimers.Count > 0 ? new DateTime(Model.DayTimers[0].)
+
+			foreach (var timer in Model.DayTimers)
+			{
+				
+			}
 		}
 
 		private void OnOkClick(object sender, EventArgs e)

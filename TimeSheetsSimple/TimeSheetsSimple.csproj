@@ -78,6 +78,12 @@
     <Compile Include="StartForm.Designer.cs">
       <DependentUpon>StartForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TimerUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TimerUserControl.Designer.cs">
+      <DependentUpon>TimerUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="TimeSheetGrid.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -107,6 +113,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="StartForm.resx">
       <DependentUpon>StartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TimerUserControl.resx">
+      <DependentUpon>TimerUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TimeSheetGrid.resx">
       <DependentUpon>TimeSheetGrid.cs</DependentUpon>

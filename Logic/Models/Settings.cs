@@ -24,7 +24,7 @@ namespace Logic.Models
 
 		[XmlArrayItem("Timer", typeof(DayTimer))]
 		[XmlArray("Timers")]
-		public List<DayTimer> Timers { get; set; }
+		public List<DayTimer> Timers { get; set; } = new List<DayTimer>();
 		
 		public Settings()
 		{
@@ -42,7 +42,11 @@ namespace Logic.Models
 
 		public static Settings GetDefaultSettings()
 		{
-			return new Settings {Path = GetDefaultPath(Environment.CurrentDirectory) };
+			var settings = new Settings {Path = GetDefaultPath(Environment.CurrentDirectory) };
+			settings.Timers.Add(DayTimer.Morning);
+			settings.Timers.Add(DayTimer.Noon);
+			settings.Timers.Add(DayTimer.Evening);
+			return settings;
 		}
 
 		private static string GetDefaultDbPath(string root)

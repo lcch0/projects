@@ -28,6 +28,9 @@ namespace TimeSheetsSimple
 			this._btnCancel = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
 			this._txtProj = new System.Windows.Forms.TextBox();
+			this.timerUserControl1 = new TimeSheetsSimple.TimerUserControl();
+			this.timerUserControl2 = new TimeSheetsSimple.TimerUserControl();
+			this.timerUserControl3 = new TimeSheetsSimple.TimerUserControl();
 			this.SuspendLayout();
 			// 
 			// _txtUsr
@@ -77,7 +80,7 @@ namespace TimeSheetsSimple
 			// 
 			// _btnOk
 			// 
-			this._btnOk.Location = new System.Drawing.Point(13, 115);
+			this._btnOk.Location = new System.Drawing.Point(10, 143);
 			this._btnOk.Name = "_btnOk";
 			this._btnOk.Size = new System.Drawing.Size(75, 23);
 			this._btnOk.TabIndex = 6;
@@ -86,7 +89,7 @@ namespace TimeSheetsSimple
 			// 
 			// _btnCancel
 			// 
-			this._btnCancel.Location = new System.Drawing.Point(525, 115);
+			this._btnCancel.Location = new System.Drawing.Point(525, 143);
 			this._btnCancel.Name = "_btnCancel";
 			this._btnCancel.Size = new System.Drawing.Size(75, 23);
 			this._btnCancel.TabIndex = 7;
@@ -108,12 +111,36 @@ namespace TimeSheetsSimple
 			this._txtProj.Size = new System.Drawing.Size(509, 20);
 			this._txtProj.TabIndex = 8;
 			// 
+			// timerUserControl1
+			// 
+			this.timerUserControl1.Location = new System.Drawing.Point(91, 111);
+			this.timerUserControl1.Name = "timerUserControl1";
+			this.timerUserControl1.Size = new System.Drawing.Size(166, 26);
+			this.timerUserControl1.TabIndex = 10;
+			// 
+			// timerUserControl2
+			// 
+			this.timerUserControl2.Location = new System.Drawing.Point(263, 111);
+			this.timerUserControl2.Name = "timerUserControl2";
+			this.timerUserControl2.Size = new System.Drawing.Size(166, 26);
+			this.timerUserControl2.TabIndex = 11;
+			// 
+			// timerUserControl3
+			// 
+			this.timerUserControl3.Location = new System.Drawing.Point(434, 111);
+			this.timerUserControl3.Name = "timerUserControl3";
+			this.timerUserControl3.Size = new System.Drawing.Size(166, 26);
+			this.timerUserControl3.TabIndex = 12;
+			// 
 			// SettingsForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(607, 142);
+			this.ClientSize = new System.Drawing.Size(607, 171);
 			this.ControlBox = false;
+			this.Controls.Add(this.timerUserControl3);
+			this.Controls.Add(this.timerUserControl2);
+			this.Controls.Add(this.timerUserControl1);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this._txtProj);
 			this.Controls.Add(this._btnCancel);
@@ -144,5 +171,8 @@ namespace TimeSheetsSimple
 		private Button _btnCancel;
 		private Label label1;
 		private TextBox _txtProj;
+		private TimerUserControl timerUserControl1;
+		private TimerUserControl timerUserControl2;
+		private TimerUserControl timerUserControl3;
 	}
 }

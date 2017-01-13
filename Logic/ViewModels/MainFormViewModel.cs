@@ -14,12 +14,10 @@ namespace Logic.ViewModels
 		public Action OnQuit { get; set; }
 		public ICommand LoadSettingsCommand { get; set; }
 		public ICommand LoadDBCommand { get; set; }
-		public ICommand StartTimersCommand { get; set; }
 
 		public MainFormViewModel(TimeSheetsModel model) : base(model)
 		{
 			LoadDBCommand = new RelayCommand<MainFormViewModel>(LoadDB);
-			StartTimersCommand = new RelayCommand<MainFormViewModel>(StartTimers);
 			LoadSettingsCommand = new RelayCommand<string>(LoadSettings);
 		}
 
@@ -27,11 +25,6 @@ namespace Logic.ViewModels
 		{
 			var settingsViewModel = new SettingsViewModel(Model);
 			settingsViewModel.LoadSettingsCommand.Execute(path);
-		}
-
-		private void StartTimers(MainFormViewModel obj)
-		{
-			
 		}
 
 		private void LoadDB(MainFormViewModel obj)

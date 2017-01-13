@@ -31,7 +31,6 @@ namespace TimeSheets
 				Model = new MainFormViewModel(model);
 				Model.LoadSettingsCommand.Execute(Settings.GetDefaultPath(Environment.CurrentDirectory));
 				Model.LoadDBCommand.Execute(Model);
-				Model.StartTimersCommand.Execute(Model);
 			}
 			catch (Exception ex)
 			{

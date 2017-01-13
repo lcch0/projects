@@ -10,12 +10,13 @@ namespace TimeSheetsSimple
 		private readonly Timer _timer = new Timer();
 		private MainForm _mainForm;
 		private MainFormViewModel Model { get; set; }
+		private TaskViewModel TaskViewModel { get; set; }
 
 		public StartForm()
 		{
 			InitializeComponent();
 			InitializeModel();
-			
+
 			_timer.Tick += OnTimerTick;
 			_timer.Interval = 500;
 
@@ -28,11 +29,16 @@ namespace TimeSheetsSimple
 			{
 				var model = new TimeSheetsModel();
 
-				Model = new MainFormViewModel(model);
-				Model.OnQuit = CloseApp;
+				Model = new MainFormViewModel(model) {OnQuit = CloseApp};
+
 				Model.LoadSettingsCommand.Execute(Settings.GetDefaultPath(Environment.CurrentDirectory));
 				Model.LoadDBCommand.Execute(Model);
-				Model.StartTimersCommand.Execute(Model);
+
+				TaskViewModel = new TaskViewModel(Model.Model.Settings)
+				{
+					OnCompleted = OnCompleted,
+					OnTimeReached = OnTimeReached
+				};
 			}
 			catch (Exception ex)
 			{
@@ -44,6 +50,17 @@ namespace TimeSheetsSimple
 		{
 			base.OnLoad(e);
 			_timer.Start();
+			TaskViewModel.StartTaskCommand.Execute(TaskViewModel);
+		}
+
+		private bool OnTimeReached(DateTime dateTime)
+		{
+			return true;
+		}
+
+		private bool OnCompleted(DateTime dateTime)
+		{
+			return true;
 		}
 
 		private void OnTimerTick(object sender, EventArgs e)
@@ -83,6 +100,7 @@ namespace TimeSheetsSimple
 		private void CloseApp()
 		{
 			_mainForm?.Dispose();
+			TaskViewModel?.StopTaskCommand.Execute(TaskViewModel);
 			Close();
 		}
 	}

@@ -23,12 +23,9 @@ namespace TimeSheetsSimple
 			_txtConn.Text = Model.DbPath;
 			_txtProj.Text = Model.Project;
 
-			timerUserControl1.Time = Model.DayTimers.Count > 0 ? new DateTime(Model.DayTimers[0].)
-
-			foreach (var timer in Model.DayTimers)
-			{
-				
-			}
+			timerUserControl1.Time = Model.DayTimers.Count > 0 ? Model.DayTimers[0].TimeSet : DayTimer.Morning.TimeSet;
+			timerUserControl2.Time = Model.DayTimers.Count > 1 ? Model.DayTimers[1].TimeSet : DayTimer.Noon.TimeSet;
+			timerUserControl3.Time = Model.DayTimers.Count > 2 ? Model.DayTimers[2].TimeSet : DayTimer.Evening.TimeSet;
 		}
 
 		private void OnOkClick(object sender, EventArgs e)
@@ -38,6 +35,10 @@ namespace TimeSheetsSimple
 			Model.DbPath = _txtConn.Text;
 			Model.Project = _txtProj.Text;
 
+			Model.DayTimers[0].TimeSet = timerUserControl1.Time;
+			Model.DayTimers[1].TimeSet = timerUserControl2.Time;
+			Model.DayTimers[2].TimeSet = timerUserControl3.Time;
+			
 			Model.SaveSettingsCommand.Execute(Model.Settings);	
 			Close();
 		}

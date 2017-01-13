@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -9,7 +10,7 @@ namespace Logic.ViewModels
 {
 	public class TaskViewModel : IDisposable
 	{
-		private Settings _model;
+		private readonly Settings _model;
 		private readonly int _waitMsec = 5*1000*60;//5 min
 		private readonly int _exitWait = 1000*10;//10 sec
 		private CancellationTokenSource _token;
@@ -17,8 +18,8 @@ namespace Logic.ViewModels
 		public ICommand StartTaskCommand { get; set; }
 		public ICommand StopTaskCommand { get; set; }
 
-		public Func<DateTime, bool> OnTimeReached { get; set; }
-		public Func<DateTime, bool> OnCompleted { get; set; }
+		public Func<DateTime?, bool> OnTimeReached { get; set; }
+		public Func<DateTime?, bool> OnCompleted { get; set; }
 
 		public TaskViewModel(Settings model)
 		{
@@ -40,12 +41,13 @@ namespace Logic.ViewModels
 
 		private async void StartCheckTask(TaskViewModel obj)
 		{
+			_token?.Dispose();
+
 			using (_token = new CancellationTokenSource())
 			{
 				await Task.Factory.StartNew(RunTask, _token.Token);
 				OnCompleted?.Invoke(DateTime.Now);
 			}
-			_token = null;
 		}
 
 		private void RunTask()
@@ -55,10 +57,9 @@ namespace Logic.ViewModels
 				if (_token.IsCancellationRequested)
 					break;
 
-				var now = DateTime.Now;
 				if (TimeIsClose(_waitMsec))
 				{
-					OnTimeReached?.Invoke(now);
+					OnTimeReached?.Invoke(DateTime.Now);
 				}
 				if (_token.Token.WaitHandle.WaitOne(_waitMsec))
 					break;
@@ -67,7 +68,10 @@ namespace Logic.ViewModels
 
 		private bool TimeIsClose(int waitMsec)
 		{
-			return true;
+			var hour = DateTime.Now.Hour;
+			var minute = DateTime.Now.Minute;
+			var minuteShift = waitMsec/(60*1000);
+			return _model.Timers.Where(dayTimer => dayTimer.Hour == hour).Any(dayTimer => Math.Abs(dayTimer.Minute - minute) < minuteShift);
 		}
 
 		public void Dispose()

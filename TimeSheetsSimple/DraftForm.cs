@@ -27,5 +27,18 @@ namespace TimeSheetsSimple
 			OnClose?.Invoke();
 			Close();
 		}
+
+		internal static void ShowDraftForm(IWin32Window parent, TimeSheetsModel model, ref DraftForm draftForm, EventHandler onDispose)
+		{
+			if (draftForm == null)
+			{
+				draftForm = new DraftForm();
+				draftForm.InitializeModel(model);
+				if(onDispose != null)
+					draftForm.Disposed += onDispose;
+			}
+
+			draftForm.Show(parent);
+		}
 	}
 }

@@ -11,15 +11,17 @@ namespace Logic.ViewModels
 	public class TaskViewModel : IDisposable
 	{
 		private readonly Settings _model;
-		private readonly int _waitMsec = 5*1000*60;//5 min
-		private readonly int _exitWait = 1000*10;//10 sec
+		private const int Minute = 60000; 
+		//private readonly int _waitMsec = 5*1000*60;//5 min
+		private readonly int _waitMsec = Minute;//debug, 1 min
+		private readonly int _exitWait = Minute/6;//10 sec
 		private CancellationTokenSource _token;
 
 		public ICommand StartTaskCommand { get; set; }
 		public ICommand StopTaskCommand { get; set; }
 
 		public Func<DateTime?, bool> OnTimeReached { get; set; }
-		public Func<DateTime?, bool> OnCompleted { get; set; }
+		public Func<DateTime?, bool> OnTaskCompleted { get; set; }
 
 		public TaskViewModel(Settings model)
 		{
@@ -46,7 +48,7 @@ namespace Logic.ViewModels
 			using (_token = new CancellationTokenSource())
 			{
 				await Task.Factory.StartNew(RunTask, _token.Token);
-				OnCompleted?.Invoke(DateTime.Now);
+				OnTaskCompleted?.Invoke(DateTime.Now);
 			}
 		}
 
@@ -61,6 +63,7 @@ namespace Logic.ViewModels
 				{
 					OnTimeReached?.Invoke(DateTime.Now);
 				}
+				
 				if (_token.Token.WaitHandle.WaitOne(_waitMsec))
 					break;
 			}

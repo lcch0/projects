@@ -7,7 +7,7 @@ namespace TimeSheetsSimple
 {
 	public partial class StartForm : Form
 	{
-		private readonly Timer _timer = new Timer();
+		private readonly Timer _timer = new Timer();//this is to show start form for 500 ms and then close
 		private MainForm _mainForm;
 		private MainFormViewModel Model { get; set; }
 		private TaskViewModel TaskViewModel { get; set; }
@@ -36,7 +36,7 @@ namespace TimeSheetsSimple
 
 				TaskViewModel = new TaskViewModel(Model.Model.Settings)
 				{
-					OnCompleted = OnCompleted,
+					OnTaskCompleted = OnCompleted,
 					OnTimeReached = OnTimeReached
 				};
 			}
@@ -53,12 +53,14 @@ namespace TimeSheetsSimple
 			TaskViewModel.StartTaskCommand.Execute(TaskViewModel);
 		}
 
-		private bool OnTimeReached(DateTime dateTime)
+		private bool OnTimeReached(DateTime? dateTime)
 		{
+			DraftForm df = null;
+			Invoke((MethodInvoker) delegate { DraftForm.ShowDraftForm(null, Model.Model, ref df, null); });
 			return true;
 		}
 
-		private bool OnCompleted(DateTime dateTime)
+		private bool OnCompleted(DateTime? dateTime)
 		{
 			return true;
 		}
@@ -76,17 +78,20 @@ namespace TimeSheetsSimple
 
 		private void ShowMainForm()
 		{
+			CreateMainForm();
+			_mainForm.InitializeModel(Model);
+			_mainForm.Show();
+		}
+
+		private void CreateMainForm()
+		{
 			if (_mainForm == null)
 			{
 				_mainForm = new MainForm();
 				_mainForm.Disposed += (sender, args) => { _mainForm = null; };
 			}
-
-			_mainForm.InitializeModel(Model);
-
-			_mainForm.Show();
 		}
-		
+
 		private void _showMenu_Click(object sender, EventArgs e)
 		{
 			ShowMainForm();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Logic.Models;
 using Logic.ViewModels;
 
 namespace TimeSheetsSimple
@@ -24,19 +25,7 @@ namespace TimeSheetsSimple
 
 		private void lastDraftToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ShowDraftForm();
-		}
-
-		private void ShowDraftForm()
-		{
-			if (_draftForm == null)
-			{
-				_draftForm = new DraftForm();
-				_draftForm.InitializeModel(Model.Model);
-				_draftForm.Disposed += (o, args) => _draftForm = null;
-			}
-
-			_draftForm.Show(this);
+			DraftForm.ShowDraftForm(this, Model.Model, ref _draftForm, (o, args) => _draftForm = null);
 		}
 
 		private void OnSettingsMenu(object sender, EventArgs e)

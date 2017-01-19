@@ -43,6 +43,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="DbSerializer\LiteDb\DraftViewModelSerializer.cs" />
+    <Compile Include="DbSerializer\LiteDb\EditorViewModelSerializer.cs" />
+    <Compile Include="DbSerializer\LiteDb\MainFormViewSerializer.cs" />
     <Compile Include="Models\DraftModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Models\ProjectModel.cs" />

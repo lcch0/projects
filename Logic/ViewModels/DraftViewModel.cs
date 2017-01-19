@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Windows.Input;
 using Logic.Commands;
+using Logic.DbSerializer.LiteDb;
 using Logic.Models;
-using Storage.Serializable;
-using Storage.Serializers;
 
 namespace Logic.ViewModels
 {
@@ -36,48 +35,8 @@ namespace Logic.ViewModels
 			var draft = new DraftModel(null) {Text = Text};
 			foundActivity.Drafts.Add(draft);
 
-			SaveActivity(foundActivity);
-		}
-
-		private void SaveActivity(ActivityModel activityModel)
-		{
-			Activity activity = GetActivity(activityModel);
-			if (activity == null)
-				return;
-
-			using (var context = new LiteDbSerializer(Model.Settings.ConnectionStr))
-			{
-				if (activity.Project.Id == 0)
-				{
-					context.AddRecord(activity.Project, context.GetCollection<Project>());
-				}
-
-				if (activity.User.Id == 0)
-				{
-					context.AddRecord(activity.User, context.GetCollection<User>());
-				}
-
-				var collection = context.GetCollection<Activity>();
-				collection = collection.Include(x => x.Project).Include(x => x.User);
-				if (activity.Id == 0)
-				{
-					activityModel.Id = context.AddRecord(activity, collection);
-					Model.RaisePropertyChanged(this, () => Model.Activities);
-				}
-				else
-				{
-					context.UpdateRecord(activity, collection);
-				}
-			}
-		}
-
-		private Activity GetActivity(ActivityModel activity)
-		{
-			var a = activity.GetStorageObject();
-			a.Project = Model.SelectedProject.GetStorageObject();
-			a.User = Model.SelectedUser.GetStorageObject();
-
-			return a;
+			var s = new DraftViewModelSerializer(Model);
+			s.SaveActivity(foundActivity);
 		}
 
 		private ActivityModel CreateNewActivity()

@@ -9,7 +9,9 @@ namespace TimeSheetsSimple
 	public partial class Editor : UserControl
 	{
 		private EditorViewModel Model { get; set; }
-		
+		private const string MergeDrafts = "Merge drafts";
+		private const string EditEntity = "Edit";
+
 		public Editor()
 		{
 			InitializeComponent();
@@ -22,6 +24,7 @@ namespace TimeSheetsSimple
 		private void SetEditMode()
 		{
 			_memoDesc.ReadOnly = !Model.IsInEditMode;
+			_btnAdd.Text = Model.IsInEditMode ? MergeDrafts : EditEntity;
 		}
 
 		private void OnApplyClick(object sender, System.EventArgs e)
@@ -125,11 +128,20 @@ namespace TimeSheetsSimple
 
 		private void OnRecordChangeClick(object sender, System.EventArgs e)
 		{
-			Model.EditActivity = 
-				sender == _btnAdd 
-				? Model.CreateNewActivity() 
-				: (Model.SelectedActivity ?? Model.CreateNewActivity());
-			UpdateActivity(Model.EditActivity);
+			if (_btnAdd.Text == EditEntity)
+			{
+				Model.EditActivity =
+					sender == _btnAdd
+						? Model.CreateNewActivity()
+						: (Model.SelectedActivity ?? Model.CreateNewActivity());
+				UpdateActivity(Model.EditActivity);
+				_btnAdd.Text = MergeDrafts;
+			}
+
+			if (_btnAdd.Text == MergeDrafts)
+			{
+				Model.EditActivity.MergeDrafts();
+			}
 		}
 	}
 }

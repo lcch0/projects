@@ -15,6 +15,8 @@ namespace Logic.Models
 		public int Minute { get; set; }
 		[XmlElement("Started")]
 		public int Started { get; set; }
+		[XmlElement("Enabled")]
+		public int Enabled { get; set; }
 
 		[XmlIgnore]
 		public DateTime TimeSet

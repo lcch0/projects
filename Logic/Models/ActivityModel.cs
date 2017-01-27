@@ -77,5 +77,11 @@ namespace Logic.Models
 
 			return sb.ToString();
 		}
+
+		public void MergeDrafts()
+		{
+			Description = GetDescription(true);
+			Drafts.
+		}
 	}
 }

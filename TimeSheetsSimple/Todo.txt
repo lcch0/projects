@@ -9,3 +9,8 @@
 Драфт - 5 мин неактивности - закрываем
 Settings - save checkbox
 Save/Load - move from models
+
+
+Merge drafts
+
+Export to csv

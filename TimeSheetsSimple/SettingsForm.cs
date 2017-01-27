@@ -23,9 +23,59 @@ namespace TimeSheetsSimple
 			_txtConn.Text = Model.DbPath;
 			_txtProj.Text = Model.Project;
 
-			timerUserControl1.Time = Model.DayTimers.Count > 0 ? Model.DayTimers[0].TimeSet : DayTimer.Morning.TimeSet;
-			timerUserControl2.Time = Model.DayTimers.Count > 1 ? Model.DayTimers[1].TimeSet : DayTimer.Noon.TimeSet;
-			timerUserControl3.Time = Model.DayTimers.Count > 2 ? Model.DayTimers[2].TimeSet : DayTimer.Evening.TimeSet;
+			SetTimer(timerUserControl1, 0);
+			SetTimer(timerUserControl2, 1);
+			SetTimer(timerUserControl3, 2);
+		}
+
+		private void SetTimer(TimerUserControl cnt, int number)
+		{
+			DayTimer timer;
+
+			if (number == 0)
+			{
+				timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.Morning;
+			}
+			else if (number == 1)
+			{
+				timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.Noon;
+			}
+			else if (number == 2)
+			{
+				timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.Evening;
+			}
+			else
+			{
+				return;
+			}
+
+			cnt.Time = timer.TimeSet;
+			cnt.Started = timer.Enabled > 0;
+		}
+
+		private void GetTimer(TimerUserControl cnt, int number)
+		{
+			DayTimer timer;
+
+			if (number == 0)
+			{
+				timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.Morning;
+			}
+			else if (number == 1)
+			{
+				timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.Noon;
+			}
+			else if (number == 2)
+			{
+				timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.Evening;
+			}
+			else
+			{
+				return;
+			}
+
+			timer.TimeSet = cnt.Time;
+			timer.Enabled = cnt.Started ? 1 : 0;
 		}
 
 		private void OnOkClick(object sender, EventArgs e)
@@ -35,10 +85,10 @@ namespace TimeSheetsSimple
 			Model.DbPath = _txtConn.Text;
 			Model.Project = _txtProj.Text;
 
-			Model.DayTimers[0].TimeSet = timerUserControl1.Time;
-			Model.DayTimers[1].TimeSet = timerUserControl2.Time;
-			Model.DayTimers[2].TimeSet = timerUserControl3.Time;
-			
+			GetTimer(timerUserControl1, 0);
+			GetTimer(timerUserControl2, 1);
+			GetTimer(timerUserControl3, 2);
+
 			Model.SaveSettingsCommand.Execute(Model.Settings);	
 			Close();
 		}

@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
-using Logic.Models;
 using Logic.ViewModels;
 
 namespace TimeSheetsSimple
@@ -50,9 +51,16 @@ namespace TimeSheetsSimple
 			base.Dispose(disposing);
 		}
 
-		private void quitToolStripMenuItem1_Click(object sender, EventArgs e)
+		private void OnQuit(object sender, EventArgs e)
 		{
 			Model.OnQuit?.Invoke();
+		}
+
+		private void OnExportAsCsv(object sender, EventArgs e)
+		{
+			var path = Model.GenerateCsvFile();
+			if(File.Exists(path))
+				Process.Start(path);
 		}
 	}
 }

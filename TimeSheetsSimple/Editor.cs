@@ -11,6 +11,7 @@ namespace TimeSheetsSimple
 		private EditorViewModel Model { get; set; }
 		private const string MergeDrafts = "Merge drafts";
 		private const string EditEntity = "Edit";
+		private const string AddEntity = "Add new";
 
 		public Editor()
 		{
@@ -24,7 +25,7 @@ namespace TimeSheetsSimple
 		private void SetEditMode()
 		{
 			_memoDesc.ReadOnly = !Model.IsInEditMode;
-			_btnAdd.Text = Model.IsInEditMode ? MergeDrafts : EditEntity;
+			_btnAdd.Text = Model.IsInEditMode ? MergeDrafts : AddEntity;
 		}
 
 		private void OnApplyClick(object sender, System.EventArgs e)
@@ -128,20 +129,27 @@ namespace TimeSheetsSimple
 
 		private void OnRecordChangeClick(object sender, System.EventArgs e)
 		{
-			if (_btnAdd.Text == EditEntity)
+			if (sender == _btnAdd)
 			{
-				Model.EditActivity =
-					sender == _btnAdd
-						? Model.CreateNewActivity()
-						: (Model.SelectedActivity ?? Model.CreateNewActivity());
+				if (_btnAdd.Text == AddEntity)
+				{
+					Model.EditActivity = Model.CreateNewActivity();
+					UpdateActivity(Model.EditActivity);
+				}
+				else if (_btnAdd.Text == MergeDrafts)
+				{
+					_memoDesc.Text = Model.EditActivity.MergeDrafts();
+				}
+			}
+
+			if (sender == _btnEdit)
+			{
+				Model.EditActivity = Model.SelectedActivity ?? Model.CreateNewActivity();
 				UpdateActivity(Model.EditActivity);
 				_btnAdd.Text = MergeDrafts;
 			}
 
-			if (_btnAdd.Text == MergeDrafts)
-			{
-				Model.EditActivity.MergeDrafts();
-			}
+			
 		}
 	}
 }

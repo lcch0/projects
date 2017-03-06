@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using Storage.Serializable;
 
@@ -78,10 +79,11 @@ namespace Logic.Models
 			return sb.ToString();
 		}
 
-		public void MergeDrafts()
+		public string MergeDrafts()
 		{
 			Description = GetDescription(true);
-			Drafts.
+			Drafts.Clear();
+			return Description;
 		}
 	}
 }

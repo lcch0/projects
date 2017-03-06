@@ -73,7 +73,7 @@ namespace Logic.ViewModels
 			return ProjectModel.eType.Design;
 		}
 
-		private DateTime GetWeekDay(DateTime date, int day)
+		internal static DateTime GetWeekDay(DateTime date, int day)
 		{
 			var shift = day - (int)date.DayOfWeek;
 			TimeSpan ts = new TimeSpan(shift, 0, 0, 0);

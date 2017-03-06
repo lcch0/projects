@@ -178,7 +178,7 @@ namespace TimeSheetsSimple
 		}
 
 		#endregion
-		private System.Windows.Forms.Panel _pnlEditor;
+		private Panel _pnlEditor;
 		private Label labelControl1;
 		private NumericUpDown _spnDays;
 		private Label labelControl3;

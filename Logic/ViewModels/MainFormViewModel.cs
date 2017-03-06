@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Input;
 using Logic.Commands;
 using Logic.DbSerializer.LiteDb;
@@ -10,6 +12,8 @@ namespace Logic.ViewModels
 {
 	public class MainFormViewModel : BaseViewModel
 	{
+		private const string ReportName = "report.txt";
+
 		public Action OnQuit { get; set; }
 		public ICommand LoadSettingsCommand { get; set; }
 		public ICommand LoadDBCommand { get; set; }
@@ -66,6 +70,41 @@ namespace Logic.ViewModels
 		private void GenerateSettings()
 		{
 			Model.Settings = new Settings();
+		}
+
+		public string GenerateCsvFile()
+		{
+			var folder = Path.GetDirectoryName(Model.Settings.Path);
+			if (string.IsNullOrEmpty(folder))
+				return string.Empty;
+
+			folder = Path.Combine(folder, ReportName);
+			var bld = new StringBuilder();
+
+			var activities = Model.Activities.OrderBy(a => a.Date);
+
+			foreach (var activity in activities)
+			{
+				activity.MergeDrafts();
+				var start = DraftViewModel.GetWeekDay(activity.Date, 1);
+				var end = DraftViewModel.GetWeekDay(activity.Date, 5);
+				bld.Append($"{GetDateString(start)} - {GetDateString(end)};");
+				bld.Append($"{activity.ProjectType};");
+				bld.AppendLine($"{activity.Description};");
+			}
+
+			if (bld.Length > 0)
+			{
+				File.WriteAllText(folder, bld.ToString());
+				return folder;
+			}
+
+			return string.Empty;
+		}
+
+		private string GetDateString(DateTime date)
+		{
+			return date.ToString("dd-MMM-yyyy");
 		}
 	}
 }

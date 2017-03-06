@@ -95,6 +95,7 @@
 			this.commaSeparatedFileCsvToolStripMenuItem.Name = "commaSeparatedFileCsvToolStripMenuItem";
 			this.commaSeparatedFileCsvToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
 			this.commaSeparatedFileCsvToolStripMenuItem.Text = "Comma separated file, csv";
+			this.commaSeparatedFileCsvToolStripMenuItem.Click += new System.EventHandler(this.OnExportAsCsv);
 			// 
 			// mSExcelXlsxToolStripMenuItem
 			// 
@@ -107,7 +108,7 @@
 			this.quitToolStripMenuItem1.Name = "quitToolStripMenuItem1";
 			this.quitToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
 			this.quitToolStripMenuItem1.Text = "Quit";
-			this.quitToolStripMenuItem1.Click += new System.EventHandler(this.quitToolStripMenuItem1_Click);
+			this.quitToolStripMenuItem1.Click += new System.EventHandler(this.OnQuit);
 			// 
 			// draftsToolStripMenuItem
 			// 

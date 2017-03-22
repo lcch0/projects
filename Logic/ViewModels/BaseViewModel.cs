@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Logic.Models;
+using Storage.Serializable;
 
 namespace Logic.ViewModels
 {
@@ -36,5 +37,18 @@ namespace Logic.ViewModels
 		{
 			RefreshView.Remove(refreshFunc);
 		}
+
+		protected Activity GetActivity(ActivityModel model)
+		{
+			if (model == null)
+				return null;
+
+			var a = model.GetStorageObject();
+			a.Project = Model.SelectedProject.GetStorageObject();
+			a.User = Model.SelectedUser.GetStorageObject();
+
+			return a;
+		}
+
 	}
 }

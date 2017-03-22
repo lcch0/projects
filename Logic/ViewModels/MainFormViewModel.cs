@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Logic.Commands;
 using Logic.DbSerializer.LiteDb;
 using Logic.Models;
+using Storage.Serializable;
 
 namespace Logic.ViewModels
 {
@@ -17,11 +18,13 @@ namespace Logic.ViewModels
 		public Action OnQuit { get; set; }
 		public ICommand LoadSettingsCommand { get; set; }
 		public ICommand LoadDBCommand { get; set; }
+		public ICommand MergeActivitiesCommand { get; set; }
 
 		public MainFormViewModel(TimeSheetsModel model) : base(model)
 		{
 			LoadDBCommand = new RelayCommand<MainFormViewModel>(LoadDB);
 			LoadSettingsCommand = new RelayCommand<string>(LoadSettings);
+			MergeActivitiesCommand = new RelayCommand<string>(MergeActivities);
 		}
 
 		private void LoadSettings(string path)
@@ -70,6 +73,45 @@ namespace Logic.ViewModels
 		private void GenerateSettings()
 		{
 			Model.Settings = new Settings();
+		}
+
+		public void MergeActivities(string stub)
+		{
+			var serializer = new EditorViewModelSerializer(Model);
+			var mergedActivities = new Dictionary<DateTime, List<ActivityModel>>();
+			foreach (var activity in Model.Activities)
+			{
+				if (!mergedActivities.ContainsKey(activity.Date))
+				{
+					mergedActivities.Add(activity.Date, new List<ActivityModel> { activity});
+				}
+
+				var foundActivities = mergedActivities[activity.Date];
+				var projectActivity =
+					foundActivities.Find(a => a.ProjectType == activity.ProjectType && a.UserName == activity.UserName);
+
+				if (projectActivity == null)
+				{
+					foundActivities.Add(activity);
+				}
+				else
+				{
+					var desc = activity.GetDescription(true);
+					var newDraft = new DraftModel(new Draft {Desc = desc});
+					projectActivity.Drafts.Add(newDraft);
+				}
+
+				serializer.DeleteActivity(activity.GetStorageObject(), false);
+			}
+
+			foreach (var lists in mergedActivities.Values)
+			{
+				foreach (var model in lists)
+				{
+					Activity a = GetActivity(model);
+					serializer.SaveActivity(a, false);
+				}
+			}
 		}
 
 		public string GenerateCsvFile()

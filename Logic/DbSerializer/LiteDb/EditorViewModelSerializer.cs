@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Logic.Models;
+﻿using Logic.Models;
 using Storage.Serializable;
 using Storage.Serializers;
 
@@ -18,8 +13,9 @@ namespace Logic.DbSerializer.LiteDb
 			_model = model;
 		}
 
-		internal void SaveActivity(Activity activity, ActivityModel editActivity)
+		internal int SaveActivity(Activity activity, bool updateModel)
 		{
+			int id;
 			using (var context = new LiteDbSerializer(_model.Settings.ConnectionStr))
 			{
 				if (activity.Project.Id == 0)
@@ -36,13 +32,37 @@ namespace Logic.DbSerializer.LiteDb
 				collection = collection.Include(x => x.Project).Include(x => x.User);
 				if (activity.Id == 0)
 				{
-					editActivity.Id = context.AddRecord(activity, collection);
-					_model.Activities.Add(editActivity);
-					_model.RaisePropertyChanged(this, () => _model.Activities);
+					id = context.AddRecord(activity, collection);
+					if (updateModel)
+					{
+						_model.Activities.Add(new ActivityModel(activity));
+						_model.RaisePropertyChanged(this, () => _model.Activities);
+					}
 				}
 				else
 				{
-					editActivity.Id = context.UpdateRecord(activity, collection);
+					id = context.UpdateRecord(activity, collection);
+				}
+			}
+
+			return id;
+		}
+
+		internal void DeleteActivity(Activity activity, bool updateModel)
+		{
+			using (var context = new LiteDbSerializer(_model.Settings.ConnectionStr))
+			{
+				var collection = context.GetCollection<Activity>();
+				collection = collection.Include(x => x.Project).Include(x => x.User);
+				if (activity.Id != 0)
+				{
+					context.DeleteRecord(activity, collection);
+					if (updateModel)
+					{
+						var count = _model.Activities.RemoveAll(a => a.Id == activity.Id);
+						if(count > 0)
+							_model.RaisePropertyChanged(this, () => _model.Activities);
+					}
 				}
 			}
 		}

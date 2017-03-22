@@ -75,32 +75,20 @@ namespace Logic.ViewModels
 
 		private void ApplyChanges(ActivityModel model)
 		{
-			Activity activity = GetActivity();
+			Activity activity = GetActivity(model);
 			if (activity == null)
 				return;
 
 			var s = new EditorViewModelSerializer(Model);
 			try
 			{
-				s.SaveActivity(activity, EditActivity);
-				SelectedActivity = EditActivity;
+				model.Id = s.SaveActivity(activity, true);
+				SelectedActivity = model;
 			}
 			finally
 			{
 				EditActivity = null;
 			}
-		}
-
-		private Activity GetActivity()
-		{
-			if (EditActivity == null)
-				return null;
-
-			var a = EditActivity.GetStorageObject();
-			a.Project = SelectedProject.GetStorageObject();
-			a.User = Model.SelectedUser.GetStorageObject();
-
-			return a;
 		}
 
 		protected override void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)

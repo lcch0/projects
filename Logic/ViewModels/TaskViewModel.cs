@@ -12,8 +12,8 @@ namespace Logic.ViewModels
 	{
 		private readonly Settings _model;
 		private const int Minute = 60000; 
-		//private readonly int _waitMsec = 5*1000*60;//5 min
-		private readonly int _waitMsec = Minute;//debug, 1 min
+		private readonly int _waitMsec = 5*1000*60;//5 min
+		//private readonly int _waitMsec = Minute;//debug, 1 min
 		private readonly int _exitWait = Minute/6;//10 sec
 		private CancellationTokenSource _token;
 
@@ -74,7 +74,16 @@ namespace Logic.ViewModels
 			var hour = DateTime.Now.Hour;
 			var minute = DateTime.Now.Minute;
 			var minuteShift = waitMsec/(60*1000);
-			return _model.Timers.Where(dayTimer => dayTimer.Hour == hour).Any(dayTimer => Math.Abs(dayTimer.Minute - minute) < minuteShift);
+			var selected = _model.Timers
+				.Where(dayTimer => dayTimer.Hour == hour && dayTimer.Enabled > 0);
+
+			foreach (var dayTimer in selected)
+			{
+				if (Math.Abs(dayTimer.Minute - minute) < minuteShift)
+					return true;
+			}
+
+			return false;
 		}
 
 		public void Dispose()

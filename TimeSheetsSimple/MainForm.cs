@@ -58,9 +58,19 @@ namespace TimeSheetsSimple
 
 		private void OnExportAsCsv(object sender, EventArgs e)
 		{
-			var path = Model.GenerateCsvFile();
-			if(File.Exists(path))
-				Process.Start(path);
+			Model.GenerateCsvCommand?.Execute(Model.SettingsPath);
+			if(File.Exists(Model.ReportFullPath))
+				Process.Start(Model.ReportFullPath);
 		}
-	}
+
+        private void OnMerge(object sender, EventArgs e)
+        {
+            Model.MergeActivitiesCommand?.Execute("merge");
+        }
+
+        private void OnArchive(object sender, EventArgs e)
+        {
+            Model.ArchiveCommand?.Execute(-1);
+        }
+    }
 }

@@ -68,11 +68,19 @@ namespace Logic.Models
 			if (!isFull)
 				return Description;
 
-			var sb = new StringBuilder($"{Description}{Environment.NewLine}{Environment.NewLine}");
+			var sb = new StringBuilder();
 
-			foreach (var draft in Drafts)
+            var strDesc = Description;
+            strDesc = strDesc.Trim('\r', '\n');
+            if (!string.IsNullOrEmpty(strDesc))
+                sb.AppendLine(strDesc);
+
+            foreach (var draft in Drafts)
 			{
-				sb.AppendLine(draft.Text);
+			    var str = draft.Text;
+			    str = str.Trim('\r', '\n');
+                if(!string.IsNullOrEmpty(str))
+				    sb.AppendLine(str);
 			}
 
 			return sb.ToString();

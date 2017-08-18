@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,20 +15,26 @@ namespace Logic.ViewModels
 	public class MainFormViewModel : BaseViewModel
 	{
 		private const string ReportName = "report.txt";
+	    public string ReportFullPath { get; set; } = string.Empty;
+	    public string SettingsPath => Model?.Settings?.Path;
 
 		public Action OnQuit { get; set; }
 		public ICommand LoadSettingsCommand { get; set; }
 		public ICommand LoadDBCommand { get; set; }
 		public ICommand MergeActivitiesCommand { get; set; }
+        public ICommand GenerateCsvCommand { get; set; }
+        public ICommand ArchiveCommand { get; set; }
 
-		public MainFormViewModel(TimeSheetsModel model) : base(model)
+        public MainFormViewModel(TimeSheetsModel model) : base(model)
 		{
 			LoadDBCommand = new RelayCommand<MainFormViewModel>(LoadDB);
 			LoadSettingsCommand = new RelayCommand<string>(LoadSettings);
 			MergeActivitiesCommand = new RelayCommand<string>(MergeActivities);
-		}
+            GenerateCsvCommand = new RelayCommand<string>(GenerateCsvFile);
+            ArchiveCommand = new RelayCommand<int>(Archive);
+        }
 
-		private void LoadSettings(string path)
+	    private void LoadSettings(string path)
 		{
 			var settingsViewModel = new SettingsViewModel(Model);
 			settingsViewModel.LoadSettingsCommand.Execute(path);
@@ -70,23 +77,23 @@ namespace Logic.ViewModels
 			}
 		}
 
-		private void GenerateSettings()
+	    private void GenerateSettings()
 		{
 			Model.Settings = new Settings();
 		}
 
-		public void MergeActivities(string stub)
+		private void MergeActivities(string stub)
 		{
 			var serializer = new EditorViewModelSerializer(Model);
-			var mergedActivities = new Dictionary<DateTime, List<ActivityModel>>();
+			var mergedActivities = new Dictionary<int, List<ActivityModel>>();
 			foreach (var activity in Model.Activities)
 			{
-				if (!mergedActivities.ContainsKey(activity.Date))
+				if (!mergedActivities.ContainsKey(activity.Week))
 				{
-					mergedActivities.Add(activity.Date, new List<ActivityModel> { activity});
+					mergedActivities.Add(activity.Week, new List<ActivityModel> { activity});
 				}
 
-				var foundActivities = mergedActivities[activity.Date];
+				var foundActivities = mergedActivities[activity.Week];
 				var projectActivity =
 					foundActivities.Find(a => a.ProjectType == activity.ProjectType && a.UserName == activity.UserName);
 
@@ -98,7 +105,8 @@ namespace Logic.ViewModels
 				{
 					var desc = activity.GetDescription(true);
 					var newDraft = new DraftModel(new Draft {Desc = desc});
-					projectActivity.Drafts.Add(newDraft);
+				    GenerateAndAddDescIfEmpty(projectActivity, desc);
+                    projectActivity.Drafts.Add(newDraft);
 				}
 
 				serializer.DeleteActivity(activity.GetStorageObject(), false);
@@ -108,17 +116,32 @@ namespace Logic.ViewModels
 			{
 				foreach (var model in lists)
 				{
-					Activity a = GetActivity(model);
-					serializer.SaveActivity(a, false);
+					var a = GetActivity(model);
+				    a.Id = 0;
+					serializer.SaveActivity(a, true);
 				}
 			}
+
+		    LoadDB(this);
 		}
 
-		public string GenerateCsvFile()
+	    private static void GenerateAndAddDescIfEmpty(ActivityModel projectActivity, string desc)
+	    {
+	        if (string.IsNullOrEmpty(projectActivity.Description))
+	        {
+	            var ind = desc.IndexOf('\r');
+	            ind = ind < 0 ? desc.IndexOf('\n') : ind;
+	            if (ind > 0)
+	                projectActivity.Description = desc.Substring(0, ind);
+	        }
+	    }
+
+	    private void GenerateCsvFile(string path)
 		{
-			var folder = Path.GetDirectoryName(Model.Settings.Path);
+		    ReportFullPath = string.Empty;
+			var folder = Path.GetDirectoryName(path);
 			if (string.IsNullOrEmpty(folder))
-				return string.Empty;
+				return;
 
 			folder = Path.Combine(folder, ReportName);
 			var bld = new StringBuilder();
@@ -138,15 +161,28 @@ namespace Logic.ViewModels
 			if (bld.Length > 0)
 			{
 				File.WriteAllText(folder, bld.ToString());
-				return folder;
+				ReportFullPath = folder;
 			}
-
-			return string.Empty;
 		}
 
 		private string GetDateString(DateTime date)
 		{
 			return date.ToString("dd-MMM-yyyy");
 		}
+
+        private void Archive(int i)
+        {
+            var currentPath = Model.Settings.ConnectionStr;
+            var arcPath = Path.GetDirectoryName(currentPath);
+            if (arcPath != null)
+            {
+                arcPath = Path.Combine(arcPath, DateTime.Now.Year.ToString());
+                if (!Directory.Exists(arcPath))
+                    Directory.CreateDirectory(arcPath);
+
+                arcPath = $"{Path.Combine(arcPath, Settings.DEFAULT_DBFILENAME)}_{DateTime.Now.ToShortDateString()}";
+                File.Copy(currentPath, arcPath, true);
+            }
+        }
 	}
 }

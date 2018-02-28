@@ -7,34 +7,31 @@ using Logic.Models.mvvm;
 
 namespace Logic.ViewModels
 {
-	public class GridViewModel : BaseViewModel
-	{
-		public List<ActivityModel> EditEntries
-		{
-			get { return Model.Activities; }
-			set
-			{
-				Model.Activities = value;
-			}
-		}
+    public class GridViewModel : BaseViewModel
+    {
+        public GridViewModel(TimeSheetsModel model) : base(model)
+        {
+            Model = model;
+            SelectionChangedCommand = new RelayCommand<ActivityModel>(SelectionChanged);
+        }
 
-		public ICommand SelectionChangedCommand { get; set; }
+        public List<ActivityModel> EditEntries
+        {
+            get => Model.Activities;
+            set => Model.Activities = value;
+        }
 
-		public GridViewModel(TimeSheetsModel model) : base(model)
-		{
-			Model = model;
-			SelectionChangedCommand = new RelayCommand<ActivityModel>(SelectionChanged);
-		}
+        public ICommand SelectionChangedCommand { get; set; }
 
-		private void SelectionChanged(ActivityModel obj)
-		{
-			Model.SelectedActivity = obj;
-		}
+        private void SelectionChanged(ActivityModel obj)
+        {
+            Model.SelectedActivity = obj;
+        }
 
-		protected override void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			if (sender != this && e.PropertyName == PropertySupport.ExtractPropertyName(() => Model.Activities))
-				base.OnModelPropertyChanged(sender, e);
-		}
-	}
+        protected override void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender != this && e.PropertyName == PropertySupport.ExtractPropertyName(() => Model.Activities))
+                base.OnModelPropertyChanged(sender, e);
+        }
+    }
 }

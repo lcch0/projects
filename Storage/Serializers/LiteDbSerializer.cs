@@ -6,77 +6,73 @@ using Storage.Interfaces;
 
 namespace Storage.Serializers
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public class LiteDbSerializer : IDisposable
-	{
-		private readonly IRepositoryContext<LiteDatabase> _context;
+    /// <summary>
+    /// </summary>
+    public class LiteDbSerializer : IDisposable
+    {
+        private readonly IRepositoryContext<LiteDatabase> _context;
 
-		public LiteDbSerializer(string path)
-		{
-			_context = new LiteDbRepositoryContext(path);
-		}
+        public LiteDbSerializer(string path)
+        {
+            _context = new LiteDbRepositoryContext(path);
+        }
 
-		public IEnumerable<T> GetRecords<T>(int id = 0) where T : IIdRecord, new()
-		{
-			return GetRecords<T>(id, null);
-		}
+        public void Dispose()
+        {
+            _context?.Dispose();
+        }
 
-		public IEnumerable<T> GetRecords<T>(int id, LiteCollection<T> collection) where T : IIdRecord, new()
-		{
-			if (collection == null)
-				collection = GetCollection<T>();
+        public IEnumerable<T> GetRecords<T>(int id = 0) where T : IIdRecord, new()
+        {
+            return GetRecords<T>(id, null);
+        }
 
-			if (id > 0)
-			{
-				return new List<T> { collection.FindById(id) };
-			}
+        public IEnumerable<T> GetRecords<T>(int id, LiteCollection<T> collection) where T : IIdRecord, new()
+        {
+            if (collection == null)
+                collection = GetCollection<T>();
 
-			return collection.FindAll();
-		}
+            if (id > 0) return new List<T> {collection.FindById(id)};
 
-		public LiteCollection<T> GetCollection<T>() where T : IIdRecord, new()
-		{
-			var t = new T();
-			return _context.Connection.GetCollection<T>(t.TableName);
-		}
+            return collection.FindAll();
+        }
 
-		public LiteCollection<T> IncludeFunc<T>(LiteCollection<T> collection) where T : IIdRecord, new()
-		{
-			return collection.Include(x => x.TableName);
-		}
+        public LiteCollection<T> GetCollection<T>() where T : IIdRecord, new()
+        {
+            var t = new T();
+            return _context.Connection.GetCollection<T>(t.TableName);
+        }
 
-		public int AddRecord<T>(T doc, LiteCollection<T> collection = null) where T : IIdRecord, new()
-		{
-			if (collection == null)
-				collection = GetCollection<T>();
-			
-			collection.Insert(doc);
-			return doc.Id;
-		}
+        public LiteCollection<T> IncludeFunc<T>(LiteCollection<T> collection) where T : IIdRecord, new()
+        {
+            return collection.Include(x => x.TableName);
+        }
 
-		public int UpdateRecord<T>(T doc, LiteCollection<T> collection = null) where T : IIdRecord, new()
-		{
-			if (collection == null)
-				collection = GetCollection<T>();
+        public int AddRecord<T>(T doc, LiteCollection<T> collection = null) where T : IIdRecord, new()
+        {
+            if (collection == null)
+                collection = GetCollection<T>();
 
-			collection.Update(doc);
-			return doc.Id;
-		}
+            collection.Insert(doc);
+            return doc.Id;
+        }
 
-		public int DeleteRecord<T>(T doc, LiteCollection<T> collection = null) where T : IIdRecord, new()
-		{
-			if (collection == null)
-				collection = GetCollection<T>();
+        public int UpdateRecord<T>(T doc, LiteCollection<T> collection = null) where T : IIdRecord, new()
+        {
+            if (collection == null)
+                collection = GetCollection<T>();
 
-			collection.Delete(doc.Id);
-			return doc.Id;
-		}
+            collection.Update(doc);
+            return doc.Id;
+        }
 
-		public void Dispose()
-		{
-			_context?.Dispose();
-		}
-	}
+        public int DeleteRecord<T>(T doc, LiteCollection<T> collection = null) where T : IIdRecord, new()
+        {
+            if (collection == null)
+                collection = GetCollection<T>();
+
+            collection.Delete(doc.Id);
+            return doc.Id;
+        }
+    }
 }

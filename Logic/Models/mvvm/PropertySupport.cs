@@ -4,34 +4,25 @@ using System.Reflection;
 
 namespace Logic.Models.mvvm
 {
-	public static class PropertySupport
-	{
-		public static string ExtractPropertyName<T>(Expression<Func<T>> propertyExpresssion)
-		{
-			if (propertyExpresssion == null)
-			{
-				throw new ArgumentNullException("propertyExpresssion");
-			}
+    public static class PropertySupport
+    {
+        public static string ExtractPropertyName<T>(Expression<Func<T>> propertyExpresssion)
+        {
+            if (propertyExpresssion == null) throw new ArgumentNullException(nameof(propertyExpresssion));
 
-			var memberExpression = propertyExpresssion.Body as MemberExpression;
-			if (memberExpression == null)
-			{
-				throw new ArgumentException("The expression is not a member access expression.", "propertyExpresssion");
-			}
+            if (!(propertyExpresssion.Body is MemberExpression memberExpression))
+                throw new ArgumentException("The expression is not a member access expression.", nameof(propertyExpresssion));
 
-			var property = memberExpression.Member as PropertyInfo;
-			if (property == null)
-			{
-				throw new ArgumentException("The member access expression does not access a property.", "propertyExpresssion");
-			}
+            var property = memberExpression.Member as PropertyInfo;
+            if (property == null)
+                throw new ArgumentException("The member access expression does not access a property.",
+                    nameof(propertyExpresssion));
 
-			var getMethod = property.GetGetMethod(true);
-			if (getMethod.IsStatic)
-			{
-				throw new ArgumentException("The referenced property is a static property.", "propertyExpresssion");
-			}
+            var getMethod = property.GetGetMethod(true);
+            if (getMethod.IsStatic)
+                throw new ArgumentException("The referenced property is a static property.", nameof(propertyExpresssion));
 
-			return memberExpression.Member.Name;
-		}
-	}
+            return memberExpression.Member.Name;
+        }
+    }
 }

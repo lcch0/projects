@@ -5,40 +5,41 @@ using Logic.ViewModels;
 
 namespace TimeSheetsSimple
 {
-	public partial class DraftForm : Form
-	{
-		private DraftViewModel Model { get; set; }
+    public partial class DraftForm : Form
+    {
+        public DraftForm()
+        {
+            InitializeComponent();
+        }
 
-		public Action OnClose { get; set; }
+        private DraftViewModel Model { get; set; }
 
-		public DraftForm()
-		{
-			InitializeComponent();
-		}
+        public Action OnClose { get; set; }
 
-		public void InitializeModel(TimeSheetsModel model)
-		{
-			Model = new DraftViewModel(model);
-		}
+        public void InitializeModel(TimeSheetsModel model)
+        {
+            Model = new DraftViewModel(model);
+        }
 
-		private void DraftForm_Deactivate(object sender, EventArgs e)
-		{
-			Model.AddNewDraft.Execute(_memo.Text);
-			OnClose?.Invoke();
-			Close();
-		}
+        private void DraftForm_Deactivate(object sender, EventArgs e)
+        {
+            Model.AddNewDraft.Execute(_memo.Text);
+            OnClose?.Invoke();
+            Close();
+        }
 
-		internal static void ShowDraftForm(IWin32Window parent, TimeSheetsModel model, ref DraftForm draftForm, EventHandler onDispose)
-		{
-			if (draftForm == null)
-			{
-				draftForm = new DraftForm();
-				draftForm.InitializeModel(model);
-				if(onDispose != null)
-					draftForm.Disposed += onDispose;
-			}
+        internal static void ShowDraftForm(IWin32Window parent, TimeSheetsModel model, ref DraftForm draftForm,
+            EventHandler onDispose)
+        {
+            if (draftForm == null)
+            {
+                draftForm = new DraftForm();
+                draftForm.InitializeModel(model);
+                if (onDispose != null)
+                    draftForm.Disposed += onDispose;
+            }
 
-			draftForm.Show(parent);
-		}
-	}
+            draftForm.Show(parent);
+        }
+    }
 }

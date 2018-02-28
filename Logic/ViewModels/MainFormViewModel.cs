@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,163 +11,161 @@ using Storage.Serializable;
 
 namespace Logic.ViewModels
 {
-	public class MainFormViewModel : BaseViewModel
-	{
-		private const string ReportName = "report.txt";
-	    public string ReportFullPath { get; set; } = string.Empty;
-	    public string SettingsPath => Model?.Settings?.Path;
-
-		public Action OnQuit { get; set; }
-		public ICommand LoadSettingsCommand { get; set; }
-		public ICommand LoadDBCommand { get; set; }
-		public ICommand MergeActivitiesCommand { get; set; }
-        public ICommand GenerateCsvCommand { get; set; }
-        public ICommand ArchiveCommand { get; set; }
+    public class MainFormViewModel : BaseViewModel
+    {
+        private const string ReportName = "report.txt";
 
         public MainFormViewModel(TimeSheetsModel model) : base(model)
-		{
-			LoadDBCommand = new RelayCommand<MainFormViewModel>(LoadDB);
-			LoadSettingsCommand = new RelayCommand<string>(LoadSettings);
-			MergeActivitiesCommand = new RelayCommand<string>(MergeActivities);
+        {
+            LoadDBCommand = new RelayCommand<MainFormViewModel>(LoadDB);
+            LoadSettingsCommand = new RelayCommand<string>(LoadSettings);
+            MergeActivitiesCommand = new RelayCommand<string>(MergeActivities);
             GenerateCsvCommand = new RelayCommand<string>(GenerateCsvFile);
             ArchiveCommand = new RelayCommand<int>(Archive);
         }
 
-	    private void LoadSettings(string path)
-		{
-			var settingsViewModel = new SettingsViewModel(Model);
-			settingsViewModel.LoadSettingsCommand.Execute(path);
-		}
+        public string ReportFullPath { get; set; } = string.Empty;
+        public string SettingsPath => Model?.Settings?.Path;
 
-		private void LoadDB(MainFormViewModel obj)
-		{
-			var s = new MainFormViewSerializer(Model);
+        public Action OnQuit { get; set; }
+        public ICommand LoadSettingsCommand { get; set; }
+        public ICommand LoadDBCommand { get; set; }
+        public ICommand MergeActivitiesCommand { get; set; }
+        public ICommand GenerateCsvCommand { get; set; }
+        public ICommand ArchiveCommand { get; set; }
 
-			if (Model.Settings == null)
-			{
-				GenerateSettings();
-				s.GenerateDefaultData();
-				return;
-			}
+        private void LoadSettings(string path)
+        {
+            var settingsViewModel = new SettingsViewModel(Model);
+            settingsViewModel.LoadSettingsCommand.Execute(path);
+        }
 
-			Model.Activities = new List<ActivityModel>();
+        private void LoadDB(MainFormViewModel obj)
+        {
+            var s = new MainFormViewSerializer(Model);
 
-			try
-			{
-				s.LoadTo();
+            if (Model.Settings == null)
+            {
+                GenerateSettings();
+                s.GenerateDefaultData();
+                return;
+            }
 
-				if (Model.Activities.Count > 0)
-				{
-					Model.Activities = Model.Activities.OrderByDescending(e => e.Date).ToList();
-					Model.SelectedActivity = Model.Activities[0];
-					var user = Model.Users.Find(u => u.Name.Equals(Model.SelectedActivity.UserName, StringComparison.OrdinalIgnoreCase));
-					if (user != null)
-						Model.SelectedUser = user;
+            Model.Activities = new List<ActivityModel>();
 
-					var project = Model.Projects.Find(u => u.ProjectType == Model.SelectedActivity.ProjectType);
-					if (project != null)
-						Model.SelectedProject = project;
-				}
-			}
-			catch (Exception)
-			{
-				s.GenerateDefaultData();
-				throw;
-			}
-		}
+            try
+            {
+                s.LoadTo();
 
-	    private void GenerateSettings()
-		{
-			Model.Settings = new Settings();
-		}
+                if (Model.Activities.Count > 0)
+                {
+                    Model.Activities = Model.Activities.OrderByDescending(e => e.Date).ToList();
+                    Model.SelectedActivity = Model.Activities[0];
+                    var user = Model.Users.Find(u =>
+                        u.Name.Equals(Model.SelectedActivity.UserName, StringComparison.OrdinalIgnoreCase));
+                    if (user != null)
+                        Model.SelectedUser = user;
 
-		private void MergeActivities(string stub)
-		{
-			var serializer = new EditorViewModelSerializer(Model);
-			var mergedActivities = new Dictionary<int, List<ActivityModel>>();
-			foreach (var activity in Model.Activities)
-			{
-				if (!mergedActivities.ContainsKey(activity.Week))
-				{
-					mergedActivities.Add(activity.Week, new List<ActivityModel> { activity});
-				}
+                    var project = Model.Projects.Find(u => u.ProjectType == Model.SelectedActivity.ProjectType);
+                    if (project != null)
+                        Model.SelectedProject = project;
+                }
+            }
+            catch (Exception)
+            {
+                s.GenerateDefaultData();
+                throw;
+            }
+        }
 
-				var foundActivities = mergedActivities[activity.Week];
-				var projectActivity =
-					foundActivities.Find(a => a.ProjectType == activity.ProjectType && a.UserName == activity.UserName);
+        private void GenerateSettings()
+        {
+            Model.Settings = new Settings();
+        }
 
-				if (projectActivity == null)
-				{
-					foundActivities.Add(activity);
-				}
-				else
-				{
-					var desc = activity.GetDescription(true);
-					var newDraft = new DraftModel(new Draft {Desc = desc});
-				    GenerateAndAddDescIfEmpty(projectActivity, desc);
+        private void MergeActivities(string stub)
+        {
+            var serializer = new EditorViewModelSerializer(Model);
+            var mergedActivities = new Dictionary<int, List<ActivityModel>>();
+            foreach (var activity in Model.Activities)
+            {
+                if (!mergedActivities.ContainsKey(activity.Week))
+                    mergedActivities.Add(activity.Week, new List<ActivityModel> {activity});
+
+                var foundActivities = mergedActivities[activity.Week];
+                var projectActivity =
+                    foundActivities.Find(a => a.ProjectType == activity.ProjectType && a.UserName == activity.UserName);
+
+                if (projectActivity == null)
+                {
+                    foundActivities.Add(activity);
+                }
+                else
+                {
+                    var desc = activity.GetDescription(true);
+                    var newDraft = new DraftModel(new Draft {Desc = desc});
+                    GenerateAndAddDescIfEmpty(projectActivity, desc);
                     projectActivity.Drafts.Add(newDraft);
-				}
+                }
 
-				serializer.DeleteActivity(activity.GetStorageObject(), false);
-			}
+                serializer.DeleteActivity(activity.GetStorageObject(), false);
+            }
 
-			foreach (var lists in mergedActivities.Values)
-			{
-				foreach (var model in lists)
-				{
-					var a = GetActivity(model);
-				    a.Id = 0;
-					serializer.SaveActivity(a, true);
-				}
-			}
+            foreach (var lists in mergedActivities.Values)
+            foreach (var model in lists)
+            {
+                var a = GetActivity(model);
+                a.Id = 0;
+                serializer.SaveActivity(a, true);
+            }
 
-		    LoadDB(this);
-		}
+            LoadDB(this);
+        }
 
-	    private static void GenerateAndAddDescIfEmpty(ActivityModel projectActivity, string desc)
-	    {
-	        if (string.IsNullOrEmpty(projectActivity.Description))
-	        {
-	            var ind = desc.IndexOf('\r');
-	            ind = ind < 0 ? desc.IndexOf('\n') : ind;
-	            if (ind > 0)
-	                projectActivity.Description = desc.Substring(0, ind);
-	        }
-	    }
+        private static void GenerateAndAddDescIfEmpty(ActivityModel projectActivity, string desc)
+        {
+            if (string.IsNullOrEmpty(projectActivity.Description))
+            {
+                var ind = desc.IndexOf('\r');
+                ind = ind < 0 ? desc.IndexOf('\n') : ind;
+                if (ind > 0)
+                    projectActivity.Description = desc.Substring(0, ind);
+            }
+        }
 
-	    private void GenerateCsvFile(string path)
-		{
-		    ReportFullPath = string.Empty;
-			var folder = Path.GetDirectoryName(path);
-			if (string.IsNullOrEmpty(folder))
-				return;
+        private void GenerateCsvFile(string path)
+        {
+            ReportFullPath = string.Empty;
+            var folder = Path.GetDirectoryName(path);
+            if (string.IsNullOrEmpty(folder))
+                return;
 
-			folder = Path.Combine(folder, ReportName);
-			var bld = new StringBuilder();
+            folder = Path.Combine(folder, ReportName);
+            var bld = new StringBuilder();
 
-			var activities = Model.Activities.OrderBy(a => a.Date);
+            var activities = Model.Activities.OrderBy(a => a.Date);
 
-			foreach (var activity in activities)
-			{
-				activity.MergeDrafts();
-				var start = DraftViewModel.GetWeekDay(activity.Date, 1);
-				var end = DraftViewModel.GetWeekDay(activity.Date, 5);
-				bld.Append($"{GetDateString(start)} - {GetDateString(end)};");
-				bld.Append($"{activity.ProjectType};");
-				bld.AppendLine($"{activity.Description};");
-			}
+            foreach (var activity in activities)
+            {
+                activity.MergeDrafts();
+                var start = DraftViewModel.GetWeekDay(activity.Date, 1);
+                var end = DraftViewModel.GetWeekDay(activity.Date, 5);
+                bld.Append($"{GetDateString(start)} - {GetDateString(end)};");
+                bld.Append($"{activity.ProjectType};");
+                bld.AppendLine($"{activity.Description};");
+            }
 
-			if (bld.Length > 0)
-			{
-				File.WriteAllText(folder, bld.ToString());
-				ReportFullPath = folder;
-			}
-		}
+            if (bld.Length > 0)
+            {
+                File.WriteAllText(folder, bld.ToString());
+                ReportFullPath = folder;
+            }
+        }
 
-		private string GetDateString(DateTime date)
-		{
-			return date.ToString("dd-MMM-yyyy");
-		}
+        private string GetDateString(DateTime date)
+        {
+            return date.ToString("dd-MMM-yyyy");
+        }
 
         private void Archive(int i)
         {
@@ -184,5 +181,5 @@ namespace Logic.ViewModels
                 File.Copy(currentPath, arcPath, true);
             }
         }
-	}
+    }
 }

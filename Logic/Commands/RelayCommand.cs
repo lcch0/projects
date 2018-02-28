@@ -3,47 +3,44 @@ using System.Windows.Input;
 
 namespace Logic.Commands
 {
-	public class RelayCommand<T> : ICommand
-	{
-		#region Variables
+    public class RelayCommand<T> : ICommand
+    {
+        #region Variables
 
-		private readonly Action<T> _execute;
-		private readonly Predicate<T> _canExecute;
+        private readonly Action<T> _execute;
+        private readonly Predicate<T> _canExecute;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
-		public RelayCommand(Action<T> execute)
-			: this(execute, null)
-		{
-		}
+        public RelayCommand(Action<T> execute)
+            : this(execute, null)
+        {
+        }
 
-		public RelayCommand(Action<T> execute, Predicate<T> canExecute)
-		{
-			if (execute == null)
-				throw new ArgumentNullException(nameof(execute));
+        public RelayCommand(Action<T> execute, Predicate<T> canExecute)
+        {
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            _canExecute = canExecute;
+        }
 
-			_execute = execute;
-			_canExecute = canExecute;
-		}
+        #endregion
 
-		#endregion
+        #region ICommand Members
 
-		#region ICommand Members
+        public bool CanExecute(object parameter = null)
+        {
+            return _canExecute == null || _canExecute((T) parameter);
+        }
 
-		public bool CanExecute(object parameter = null)
-		{
-			return _canExecute == null || _canExecute((T)parameter);
-		}
+        public void Execute(object parameter = null)
+        {
+            _execute((T) parameter);
+        }
 
-		public void Execute(object parameter = null)
-		{
-			_execute((T)parameter);
-		}
+        public event EventHandler CanExecuteChanged;
 
-		public event EventHandler CanExecuteChanged;
-
-		#endregion
-	}
+        #endregion
+    }
 }

@@ -5,108 +5,109 @@ using Logic.ViewModels;
 
 namespace TimeSheetsSimple
 {
-	public partial class StartForm : Form
-	{
-		private readonly Timer _timer = new Timer();//this is to show start form for 500 ms and then close
-		private MainForm _mainForm;
-		private MainFormViewModel Model { get; set; }
-		private TaskViewModel TaskViewModel { get; set; }
+    public partial class StartForm : Form
+    {
+        private readonly Timer _timer = new Timer(); //this is to show start form for 500 ms and then close
+        private MainForm _mainForm;
 
-		public StartForm()
-		{
-			InitializeComponent();
-			InitializeModel();
+        public StartForm()
+        {
+            InitializeComponent();
+            InitializeModel();
 
-			_timer.Tick += OnTimerTick;
-			_timer.Interval = 500;
+            _timer.Tick += OnTimerTick;
+            _timer.Interval = 500;
 
-			StartPosition = FormStartPosition.CenterScreen;
-		}
+            StartPosition = FormStartPosition.CenterScreen;
+        }
 
-		private void InitializeModel()
-		{
-			try
-			{
-				var model = new TimeSheetsModel();
+        private MainFormViewModel Model { get; set; }
+        private TaskViewModel TaskViewModel { get; set; }
 
-				Model = new MainFormViewModel(model) {OnQuit = CloseApp};
+        private void InitializeModel()
+        {
+            try
+            {
+                var model = new TimeSheetsModel();
 
-				Model.LoadSettingsCommand.Execute(Settings.GetDefaultPath(Environment.CurrentDirectory));
-				Model.LoadDBCommand.Execute(Model);
+                Model = new MainFormViewModel(model) {OnQuit = CloseApp};
 
-				TaskViewModel = new TaskViewModel(Model.Model.Settings)
-				{
-					OnTaskCompleted = OnCompleted,
-					OnTimeReached = OnTimeReached
-				};
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(this, ex.Message);
-			}
-		}
-		
-		protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
-			_timer.Start();
-			TaskViewModel.StartTaskCommand.Execute(TaskViewModel);
-		}
+                Model.LoadSettingsCommand.Execute(Settings.GetDefaultPath(Environment.CurrentDirectory));
+                Model.LoadDBCommand.Execute(Model);
 
-		private bool OnTimeReached(DateTime? dateTime)
-		{
-			DraftForm df = null;
-			Invoke((MethodInvoker) delegate { DraftForm.ShowDraftForm(null, Model.Model, ref df, null); });
-			return true;
-		}
+                TaskViewModel = new TaskViewModel(Model.Model.Settings)
+                {
+                    OnTaskCompleted = OnCompleted,
+                    OnTimeReached = OnTimeReached
+                };
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message);
+            }
+        }
 
-		private bool OnCompleted(DateTime? dateTime)
-		{
-			return true;
-		}
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            _timer.Start();
+            TaskViewModel.StartTaskCommand.Execute(TaskViewModel);
+        }
 
-		private void OnTimerTick(object sender, EventArgs e)
-		{
-			_timer.Stop();
-			Visible = false;
-		}
+        private bool OnTimeReached(DateTime? dateTime)
+        {
+            DraftForm df = null;
+            Invoke((MethodInvoker) delegate { DraftForm.ShowDraftForm(null, Model.Model, ref df, null); });
+            return true;
+        }
 
-		private void _notifyIcon_DoubleClick(object sender, EventArgs e)
-		{
-			ShowMainForm();
-		}
+        private bool OnCompleted(DateTime? dateTime)
+        {
+            return true;
+        }
 
-		private void ShowMainForm()
-		{
-			CreateMainForm();
-			_mainForm.InitializeModel(Model);
-			_mainForm.Show();
-		}
+        private void OnTimerTick(object sender, EventArgs e)
+        {
+            _timer.Stop();
+            Visible = false;
+        }
 
-		private void CreateMainForm()
-		{
-			if (_mainForm == null)
-			{
-				_mainForm = new MainForm();
-				_mainForm.Disposed += (sender, args) => { _mainForm = null; };
-			}
-		}
+        private void _notifyIcon_DoubleClick(object sender, EventArgs e)
+        {
+            ShowMainForm();
+        }
 
-		private void _showMenu_Click(object sender, EventArgs e)
-		{
-			ShowMainForm();
-		}
+        private void ShowMainForm()
+        {
+            CreateMainForm();
+            _mainForm.InitializeModel(Model);
+            _mainForm.Show();
+        }
 
-		private void _exitMenu_Click(object sender, EventArgs e)
-		{
-			CloseApp();
-		}
+        private void CreateMainForm()
+        {
+            if (_mainForm == null)
+            {
+                _mainForm = new MainForm();
+                _mainForm.Disposed += (sender, args) => { _mainForm = null; };
+            }
+        }
 
-		private void CloseApp()
-		{
-			_mainForm?.Dispose();
-			TaskViewModel?.StopTaskCommand.Execute(TaskViewModel);
-			Close();
-		}
-	}
+        private void _showMenu_Click(object sender, EventArgs e)
+        {
+            ShowMainForm();
+        }
+
+        private void _exitMenu_Click(object sender, EventArgs e)
+        {
+            CloseApp();
+        }
+
+        private void CloseApp()
+        {
+            _mainForm?.Dispose();
+            TaskViewModel?.StopTaskCommand.Execute(TaskViewModel);
+            Close();
+        }
+    }
 }

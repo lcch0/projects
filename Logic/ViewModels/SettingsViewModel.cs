@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Windows.Input;
 using Logic.Commands;
@@ -8,95 +7,93 @@ using Logic.Models.XmlSerializers;
 
 namespace Logic.ViewModels
 {
-	public class SettingsViewModel : BaseViewModel
-	{
-		public Settings Settings
-		{
-			get { return Model.Settings; }
-			set { Model.Settings = value; }
-		}
+    public class SettingsViewModel : BaseViewModel
+    {
+        public SettingsViewModel(TimeSheetsModel model) : base(model)
+        {
+            SaveSettingsCommand = new RelayCommand<Settings>(SaveSettings);
+            LoadSettingsCommand = new RelayCommand<string>(LoadSettings);
+        }
 
-		public string UserName
-		{
-			get { return Model.Settings.UserName; }
-			set
-			{
-				if (Model.Settings.UserName == value)
-					return;
+        public Settings Settings
+        {
+            get => Model.Settings;
+            set => Model.Settings = value;
+        }
 
-				Model.Settings.UserName = value;
-			}
-		}
+        public string UserName
+        {
+            get => Model.Settings.UserName;
+            set
+            {
+                if (Model.Settings.UserName == value)
+                    return;
 
-		public string Password
-		{
-			get { return Model.Settings.Password; }
-			set
-			{
-				if (Model.Settings.Password == value)
-					return;
+                Model.Settings.UserName = value;
+            }
+        }
 
-				Model.Settings.Password = value;
-			}
-		}
+        public string Password
+        {
+            get => Model.Settings.Password;
+            set
+            {
+                if (Model.Settings.Password == value)
+                    return;
 
-		public string DbPath
-		{
-			get { return Model.Settings.Path; }
-			set
-			{
-				if (Model.Settings.Path == value)
-					return;
+                Model.Settings.Password = value;
+            }
+        }
 
-				Model.Settings.Path = value;
-			}
-		}
+        public string DbPath
+        {
+            get => Model.Settings.Path;
+            set
+            {
+                if (Model.Settings.Path == value)
+                    return;
 
-		public string Project
-		{
-			get { return Model.Settings.Project; }
-			set
-			{
-				if (Model.Settings.Project == value)
-					return;
+                Model.Settings.Path = value;
+            }
+        }
 
-				Model.Settings.Project = value;
-			}
-		}
+        public string Project
+        {
+            get => Model.Settings.Project;
+            set
+            {
+                if (Model.Settings.Project == value)
+                    return;
 
-		public List<DayTimer> DayTimers => Settings.Timers;
+                Model.Settings.Project = value;
+            }
+        }
 
-		public ICommand SaveSettingsCommand { get; set; }
-		public ICommand LoadSettingsCommand { get; set; }
+        public List<DayTimer> DayTimers => Settings.Timers;
 
-		public SettingsViewModel(TimeSheetsModel model) : base(model)
-		{
-			SaveSettingsCommand = new RelayCommand<Settings>(SaveSettings);
-			LoadSettingsCommand = new RelayCommand<string>(LoadSettings);
-		}
+        public ICommand SaveSettingsCommand { get; set; }
+        public ICommand LoadSettingsCommand { get; set; }
 
-		private void SaveSettings(Settings obj)
-		{
-			Exception ex;
-			SingleFileSerializer<Settings>.Save(obj, obj.Path, out ex);
-			Model.RaisePropertyChanged(this, () => Model.Settings);
-		}
+        private void SaveSettings(Settings obj)
+        {
+            SingleFileSerializer<Settings>.Save(obj, obj.Path, out _);
+            Model.RaisePropertyChanged(this, () => Model.Settings);
+        }
 
-		private void LoadSettings(string path)
-		{
-			if (File.Exists(path))
-			{
-				Exception ex;
-				Settings = SingleFileSerializer<Settings>.Load(path, out ex);
-				if (ex == null && Settings != null)
-				{
-					Settings.Path = path;
-					Model.RaisePropertyChanged(this, () => Model.Settings);
-					return;
-				}
-			}
+        private void LoadSettings(string path)
+        {
+            if (File.Exists(path))
+            {
+                Settings = SingleFileSerializer<Settings>.Load(path, out var ex);
+                if (ex == null && Settings != null)
+                {
+                    Settings.Path = path;
+                    Model.RaisePropertyChanged(this, () => Model.Settings);
+                    return;
+                }
+            }
 
-			Settings = Settings.GetDefaultSettings();
-		}
-	}
+            Settings = Settings.GetDefaultSettings();
+        }
+    }
 }

@@ -6,102 +6,83 @@ using Logic.Commands;
 using Logic.DbSerializer.LiteDb;
 using Logic.Models;
 using Logic.Models.mvvm;
-using Storage.Serializable;
 
 namespace Logic.ViewModels
 {
-	public class EditorViewModel : BaseViewModel
-	{
-		public ActivityModel SelectedActivity
-		{
-			get
-			{
-				return Model.SelectedActivity;
-			}
-			set
-			{
-				Model.SelectedActivity = value;
-			}
-		}
+    public class EditorViewModel : BaseViewModel
+    {
+        public EditorViewModel(TimeSheetsModel model) : base(model)
+        {
+            Model = model;
+            if (Model.SelectedActivity == null)
+                Model.SelectedActivity = Model.Activities.LastOrDefault();
 
-		public ActivityModel EditActivity { get; set; }
+            ApplyActivityChangedCommand = new RelayCommand<ActivityModel>(ApplyChanges);
+        }
 
-		public bool IsInEditMode => EditActivity != null;
+        public ActivityModel SelectedActivity
+        {
+            get => Model.SelectedActivity;
+            set => Model.SelectedActivity = value;
+        }
 
-		public ProjectModel SelectedProject
-		{
-			get
-			{
-				return Model.SelectedProject;
-			}
-			set
-			{
-				Model.SelectedProject = value;
-			}
-		}
+        public ActivityModel EditActivity { get; set; }
 
-		public UserModel SelectedUser => Model.SelectedUser;
+        public bool IsInEditMode => EditActivity != null;
 
-		public List<ProjectModel> Projects
-		{
-			get
-			{
-				return Model.Projects;
-			}
-			set
-			{
-				Model.Projects = value;
-			}
-		}
+        public ProjectModel SelectedProject
+        {
+            get => Model.SelectedProject;
+            set => Model.SelectedProject = value;
+        }
 
-		public ICommand ApplyActivityChangedCommand { get; set; }
+        public UserModel SelectedUser => Model.SelectedUser;
 
-		public EditorViewModel(TimeSheetsModel model) : base(model)
-		{
-			Model = model;
-			if (Model.SelectedActivity == null)
-				Model.SelectedActivity = Model.Activities.LastOrDefault();
+        public List<ProjectModel> Projects
+        {
+            get => Model.Projects;
+            set => Model.Projects = value;
+        }
 
-			ApplyActivityChangedCommand = new RelayCommand<ActivityModel>(ApplyChanges);
-		}
+        public ICommand ApplyActivityChangedCommand { get; set; }
 
-		public string GetDescription()
-		{
-			if (SelectedActivity == null)
-				return string.Empty;
+        public string GetDescription()
+        {
+            if (SelectedActivity == null)
+                return string.Empty;
 
-			return SelectedActivity.GetDescription(!IsInEditMode);
-		}
+            return SelectedActivity.GetDescription(!IsInEditMode);
+        }
 
-		private void ApplyChanges(ActivityModel model)
-		{
-			Activity activity = GetActivity(model);
-			if (activity == null)
-				return;
+        private void ApplyChanges(ActivityModel model)
+        {
+            var activity = GetActivity(model);
+            if (activity == null)
+                return;
 
-			var s = new EditorViewModelSerializer(Model);
-			try
-			{
-				model.Id = s.SaveActivity(activity, true);
-				SelectedActivity = model;
-			}
-			finally
-			{
-				EditActivity = null;
-			}
-		}
+            var s = new EditorViewModelSerializer(Model);
+            try
+            {
+                model.Id = s.SaveActivity(activity, true);
+                SelectedActivity = model;
+            }
+            finally
+            {
+                EditActivity = null;
+            }
+        }
 
-		protected override void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			if(sender != this && e.PropertyName == PropertySupport.ExtractPropertyName(()=>Model.SelectedActivity))
-				base.OnModelPropertyChanged(sender, e);
-		}
+        protected override void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender != this && e.PropertyName == PropertySupport.ExtractPropertyName(() => Model.SelectedActivity))
+                base.OnModelPropertyChanged(sender, e);
+        }
 
-		public ActivityModel CreateNewActivity()
-		{
-			var newActivity = new ActivityModel();
-			SelectedActivity?.CopyTo(newActivity);
-			return newActivity;
-		}
-	}
+        public ActivityModel CreateNewActivity()
+        {
+            var newActivity = new ActivityModel();
+            SelectedActivity?.CopyTo(newActivity);
+            return newActivity;
+        }
+    }
 }

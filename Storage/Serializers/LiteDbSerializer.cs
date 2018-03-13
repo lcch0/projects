@@ -32,9 +32,7 @@ namespace Storage.Serializers
             if (collection == null)
                 collection = GetCollection<T>();
 
-            if (id > 0) return new List<T> {collection.FindById(id)};
-
-            return collection.FindAll();
+            return id > 0 ? new List<T> {collection.FindById(id)} : collection.FindAll();
         }
 
         public LiteCollection<T> GetCollection<T>() where T : IIdRecord, new()

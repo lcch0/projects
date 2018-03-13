@@ -5,7 +5,6 @@ using System.Windows.Input;
 using Logic.Commands;
 using Logic.DbSerializer.LiteDb;
 using Logic.Models;
-using Logic.Models.mvvm;
 
 namespace Logic.ViewModels
 {
@@ -74,7 +73,7 @@ namespace Logic.ViewModels
 
         protected override void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender != this && e.PropertyName == PropertySupport.ExtractPropertyName(() => Model.SelectedActivity))
+            if (sender != this && e.PropertyName == nameof(Model.SelectedActivity))
                 base.OnModelPropertyChanged(sender, e);
         }
 

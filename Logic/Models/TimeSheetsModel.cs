@@ -12,6 +12,7 @@ namespace Logic.Models
         private UserModel _selectedUser;
         private Settings _settings = new Settings();
         private List<UserModel> _users = new List<UserModel>();
+        private List<ActivityModel> _selectedActivities = new List<ActivityModel>();
 
         public ProjectModel SelectedProject
         {
@@ -75,6 +76,19 @@ namespace Logic.Models
 
                 _selectedActivity = value;
                 RaisePropertyChanged(this, () => SelectedActivity);
+            }
+        }
+
+        public List<ActivityModel> SelectedActivities
+        {
+            get => _selectedActivities;
+            set
+            {
+                if (value.Count == _selectedActivities.Count)
+                    return;
+
+                _selectedActivities = value;
+                //RaisePropertyChanged(this, () => SelectedActivities);
             }
         }
 

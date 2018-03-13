@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Linq;
+using System.Windows.Forms;
 using Logic.Models;
 using Logic.ViewModels;
 
@@ -22,8 +23,21 @@ namespace TimeSheetsSimple
 		{
 			if(e.StateChanged == DataGridViewElementStates.Selected)
 			{
-				var row = e.Row.DataBoundItem as ActivityModel;
-				if (row != null)
+			    if (_gridControl.SelectedRows.Count > 1)
+			    {
+			        var dataRows = _gridControl.SelectedRows
+			            .OfType<DataGridViewRow>()
+			            .Select(r => r.DataBoundItem)
+			            .OfType<ActivityModel>();
+
+			        Model.SelectRowsCommand.Execute(dataRows);
+			    }
+			    else
+			    {
+			        Model.SelectRowsCommand.Execute(Enumerable.Empty<ActivityModel>());
+			    }
+
+			    if (e.Row.DataBoundItem is ActivityModel row)
 				{
 					Model.SelectionChangedCommand.Execute(row);
 				}

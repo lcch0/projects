@@ -21,7 +21,7 @@ namespace Logic.ViewModels
             LoadSettingsCommand = new RelayCommand<string>(LoadSettings);
             MergeActivitiesCommand = new RelayCommand<string>(MergeActivities);
             GenerateCsvCommand = new RelayCommand<string>(GenerateCsvFile);
-            ArchiveCommand = new RelayCommand<int>(Archive);
+            ArchiveCommand = new RelayCommand<List<ActivityModel>>(Archive);
         }
 
         public string ReportFullPath { get; set; } = string.Empty;
@@ -167,7 +167,7 @@ namespace Logic.ViewModels
             return date.ToString("dd-MMM-yyyy");
         }
 
-        private void Archive(int i)
+        private void Archive(List<ActivityModel> activityModels)
         {
             var currentPath = Model.Settings.ConnectionStr;
             var arcPath = Path.GetDirectoryName(currentPath);
@@ -179,6 +179,14 @@ namespace Logic.ViewModels
 
                 arcPath = $"{Path.Combine(arcPath, Settings.DEFAULT_DBFILENAME)}_{DateTime.Now.ToShortDateString()}";
                 File.Copy(currentPath, arcPath, true);
+
+                var serializer = new EditorViewModelSerializer(Model);
+                foreach (var activity in activityModels)
+                {
+                    serializer.DeleteActivity(activity.GetStorageObject(), false);
+                }
+
+                LoadDB(this);
             }
         }
     }

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
 using Logic.Commands;
 using Logic.Models;
-using Logic.Models.mvvm;
 
 namespace Logic.ViewModels
 {
@@ -13,6 +13,12 @@ namespace Logic.ViewModels
         {
             Model = model;
             SelectionChangedCommand = new RelayCommand<ActivityModel>(SelectionChanged);
+            SelectRowsCommand = new RelayCommand<IEnumerable<ActivityModel>>(SelectRows);
+        }
+
+        private void SelectRows(IEnumerable<ActivityModel> rows)
+        {
+            Model.SelectedActivities = rows.ToList();
         }
 
         public List<ActivityModel> EditEntries
@@ -22,6 +28,7 @@ namespace Logic.ViewModels
         }
 
         public ICommand SelectionChangedCommand { get; set; }
+        public ICommand SelectRowsCommand { get; set; }
 
         private void SelectionChanged(ActivityModel obj)
         {
@@ -30,7 +37,7 @@ namespace Logic.ViewModels
 
         protected override void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender != this && e.PropertyName == PropertySupport.ExtractPropertyName(() => Model.Activities))
+            if (sender != this && e.PropertyName == nameof(Model.Activities))
                 base.OnModelPropertyChanged(sender, e);
         }
     }

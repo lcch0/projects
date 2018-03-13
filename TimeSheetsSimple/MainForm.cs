@@ -68,7 +68,7 @@ namespace TimeSheetsSimple
 
         private void OnArchive(object sender, EventArgs e)
         {
-            Model.ArchiveCommand?.Execute(-1);
+            Model.ArchiveCommand?.Execute(Model.Model.SelectedActivities);
         }
     }
 }

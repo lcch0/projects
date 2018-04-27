@@ -16,17 +16,15 @@ namespace Logic.DbSerializer.LiteDb
         internal int SaveActivity(Activity activity, bool updateModel)
         {
             int id;
-            using (var context = SerializerFactory.GetDbSerializer(_model.Settings.ConnectionStr))
+            using (var context = Factory.GetDbSerializer(_model.Settings.ConnectionStr))
             {
-                if (activity.Project.Id == 0) context.AddRecord(activity.Project, context.GetCollection<Project>());
+                if (activity.Project.Id == 0) context.AddRecord(activity.Project);
 
-                if (activity.User.Id == 0) context.AddRecord(activity.User, context.GetCollection<User>());
+                if (activity.User.Id == 0) context.AddRecord(activity.User);
 
-                var collection = context.GetCollection<Activity>();
-                collection = collection.Include(x => x.Project).Include(x => x.User);
                 if (activity.Id == 0)
                 {
-                    id = context.AddRecord(activity, collection);
+                    id = context.AddRecord(activity);
                     if (updateModel)
                     {
                         _model.Activities.Add(new ActivityModel(activity));
@@ -35,7 +33,7 @@ namespace Logic.DbSerializer.LiteDb
                 }
                 else
                 {
-                    id = context.UpdateRecord(activity, collection);
+                    id = context.UpdateRecord(activity);
                 }
             }
 
@@ -44,13 +42,11 @@ namespace Logic.DbSerializer.LiteDb
 
         internal void DeleteActivity(Activity activity, bool updateModel)
         {
-            using (var context = SerializerFactory.GetDbSerializer(_model.Settings.ConnectionStr))
+            using (var context = Factory.GetDbSerializer(_model.Settings.ConnectionStr))
             {
-                var collection = context.GetCollection<Activity>();
-                collection = collection.Include(x => x.Project).Include(x => x.User);
                 if (activity.Id != 0)
                 {
-                    context.DeleteRecord(activity, collection);
+                    context.DeleteRecord(activity);
                     if (updateModel)
                     {
                         var count = _model.Activities.RemoveAll(a => a.Id == activity.Id);

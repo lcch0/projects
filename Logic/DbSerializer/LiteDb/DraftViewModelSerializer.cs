@@ -19,22 +19,22 @@ namespace Logic.DbSerializer.LiteDb
             if (activity == null)
                 return;
 
-            using (var context = SerializerFactory.GetDbSerializer(_model.Settings.ConnectionStr))
+            using (var context = Factory.GetDbSerializer(_model.Settings.ConnectionStr))
             {
-                if (activity.Project.Id == 0) context.AddRecord(activity.Project, context.GetCollection<Project>());
+                if (activity.Project.Id == 0) 
+                    context.AddRecord(activity.Project);
 
-                if (activity.User.Id == 0) context.AddRecord(activity.User, context.GetCollection<User>());
+                if (activity.User.Id == 0) 
+                    context.AddRecord(activity.User);
 
-                var collection = context.GetCollection<Activity>();
-                collection = collection.Include(x => x.Project).Include(x => x.User);
                 if (activity.Id == 0)
                 {
-                    activityModel.Id = context.AddRecord(activity, collection);
+                    activityModel.Id = context.AddRecord(activity);
                     _model.RaisePropertyChanged(this, () => _model.Activities);
                 }
                 else
                 {
-                    context.UpdateRecord(activity, collection);
+                    context.UpdateRecord(activity);
                 }
             }
         }

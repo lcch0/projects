@@ -1,4 +1,5 @@
 ﻿using Storage.Serializable;
+using static Storage.Serializable.Project;
 
 namespace Logic.Models
 {
@@ -6,9 +7,15 @@ namespace Logic.Models
     {
         public enum EType
         {
-            Design = 1,
-            Mobile = 2,
-            Unity = 3
+            Design = Project.EType.Design,
+            Mobile = Project.EType.Mobile,
+            Unity = Project.EType.Unity,
+            Corning = Project.EType.Corning,
+            Internal = Project.EType.Internal,
+            Ftth = Project.EType.Ftth,
+            NonDev = Project.EType.NonDev,
+            Training = Project.EType.Training,
+            Vakation = Project.EType.Vakation,
         }
 
         public ProjectModel()

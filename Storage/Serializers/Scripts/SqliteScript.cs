@@ -3,7 +3,7 @@
     internal class SqliteScript
     {
         public const string CREATE_ACTIVITY = 
-            @"CREATE TABLE [Activity](
+            @"CREATE TABLE [Activities](
                             [Id] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
                             [Date] TEXT NOT NULL, 
                             [Desc] TEXT NOT NULL, 
@@ -20,11 +20,5 @@
             @"CREATE TABLE [Users] (
 	                        [Id]	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	                        [Name]	TEXT NOT NULL);";
-
-        public const string CREATE_DRAFTS =
-            @"CREATE TABLE [Drafts](
-                            [Id] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-                            [Desc] TEXT NOT NULL, 
-                            [ActivityId] INTEGER NOT NULL REFERENCES Activity([Id]) ON DELETE CASCADE ON UPDATE CASCADE);";
     }
 }

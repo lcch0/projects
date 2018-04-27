@@ -51,7 +51,7 @@ namespace TimeSheetsSimple
         {
             base.OnLoad(e);
             _timer.Start();
-            TaskViewModel.StartTaskCommand.Execute(TaskViewModel);
+            TaskViewModel?.StartTaskCommand.Execute(TaskViewModel);
         }
 
         private bool OnTimeReached(DateTime? dateTime)

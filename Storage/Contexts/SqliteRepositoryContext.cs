@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Text.RegularExpressions;
 using Storage.Interfaces;
@@ -42,13 +43,8 @@ namespace Storage.Contexts
                     cmd.CommandText = SqliteScript.CREATE_ACTIVITY;
                     cmd.ExecuteNonQuery();
                 }
-
-                if (!TableExists(SqliteScript.CREATE_DRAFTS, Connection))
-                {
-                    cmd.CommandText = SqliteScript.CREATE_DRAFTS;
-                    cmd.ExecuteNonQuery();
-                }
             }
+
         }
 
         private static bool TableExists(string query, SQLiteConnection connection)
@@ -82,6 +78,15 @@ namespace Storage.Contexts
 
             var tableName = m.Groups["table"].Value;
             return tableName;
+        }
+
+        public int ExecuteNonQuery(DbCommand command)
+        {
+            if (command == null || Connection == null)
+                return -1;
+
+            command.ExecuteNonQuery();
+            return (int) Connection.LastInsertRowId;
         }
 
         public void Dispose()

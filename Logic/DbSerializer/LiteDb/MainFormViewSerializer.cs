@@ -17,7 +17,7 @@ namespace Logic.DbSerializer.LiteDb
 
         internal void LoadTo()
         {
-            using (var context = SerializerFactory.GetDbSerializer(_model.Settings.ConnectionStr))
+            using (var context = Factory.GetDbSerializer(_model.Settings.ConnectionStr))
             {
                 LoadProjects(context);
                 LoadUsers(context);
@@ -86,9 +86,7 @@ namespace Logic.DbSerializer.LiteDb
 
         private void LoadActivities(IDbSerializer context)
         {
-            var collection = context.GetCollection<Activity>();
-            collection = collection.Include(x => x.Project).Include(x => x.User);
-            var activities = context.GetRecords(-1, collection);
+            var activities = context.GetRecords<Activity>(-1);
 
             foreach (var activity in activities)
             {
@@ -99,7 +97,7 @@ namespace Logic.DbSerializer.LiteDb
 
         internal void GenerateDefaultData()
         {
-            using (var context = SerializerFactory.GetDbSerializer(_model.Settings.ConnectionStr))
+            using (var context = Factory.GetDbSerializer(_model.Settings.ConnectionStr))
             {
                 GenerateDefaultProjects(context);
 

@@ -11,7 +11,7 @@ namespace Logic.Models
         public UserModel(User user)
         {
             Id = user.Id;
-            Name = user?.Name ?? "No user";
+            Name = user.Name ?? "No user";
         }
 
         public int Id { get; set; }

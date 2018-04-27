@@ -10,7 +10,6 @@ namespace TimeSheetsSimple
     public partial class Editor : UserControl
     {
         private const string MergeDrafts = "Merge drafts";
-        private const string EditEntity = "Edit";
         private const string AddEntity = "Add new";
 
         public Editor()

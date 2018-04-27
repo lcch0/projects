@@ -1,5 +1,6 @@
 ﻿using System;
 using Logic.Models;
+using Storage.Interfaces;
 using Storage.Serializable;
 using Storage.Serializers;
 
@@ -16,7 +17,7 @@ namespace Logic.DbSerializer.LiteDb
 
         internal void LoadTo()
         {
-            using (var context = new LiteDbSerializer(_model.Settings.ConnectionStr))
+            using (var context = SerializerFactory.GetDbSerializer(_model.Settings.ConnectionStr))
             {
                 LoadProjects(context);
                 LoadUsers(context);
@@ -24,7 +25,7 @@ namespace Logic.DbSerializer.LiteDb
             }
         }
 
-        private void LoadProjects(LiteDbSerializer context)
+        private void LoadProjects(IDbSerializer context)
         {
             var projects = context.GetRecords<Project>();
             foreach (var project in projects)
@@ -46,7 +47,7 @@ namespace Logic.DbSerializer.LiteDb
                 }
         }
 
-        private void GenerateDefaultProjects(LiteDbSerializer context)
+        private void GenerateDefaultProjects(IDbSerializer context)
         {
             var pmodel = new ProjectModel {Id = 1, ProjectType = ProjectModel.EType.Design};
             _model.Projects.Add(pmodel);
@@ -61,7 +62,7 @@ namespace Logic.DbSerializer.LiteDb
             context.AddRecord(pmodel.GetStorageObject());
         }
 
-        private void LoadUsers(LiteDbSerializer context)
+        private void LoadUsers(IDbSerializer context)
         {
             var users = context.GetRecords<User>();
             foreach (var user in users)
@@ -83,7 +84,7 @@ namespace Logic.DbSerializer.LiteDb
                 _model.SelectedUser = new UserModel {Name = _model.Settings?.UserName ?? "No user"};
         }
 
-        private void LoadActivities(LiteDbSerializer context)
+        private void LoadActivities(IDbSerializer context)
         {
             var collection = context.GetCollection<Activity>();
             collection = collection.Include(x => x.Project).Include(x => x.User);
@@ -98,7 +99,7 @@ namespace Logic.DbSerializer.LiteDb
 
         internal void GenerateDefaultData()
         {
-            using (var context = new LiteDbSerializer(_model.Settings.ConnectionStr))
+            using (var context = SerializerFactory.GetDbSerializer(_model.Settings.ConnectionStr))
             {
                 GenerateDefaultProjects(context);
 

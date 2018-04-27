@@ -19,7 +19,7 @@ namespace Logic.DbSerializer.LiteDb
             if (activity == null)
                 return;
 
-            using (var context = new LiteDbSerializer(_model.Settings.ConnectionStr))
+            using (var context = SerializerFactory.GetDbSerializer(_model.Settings.ConnectionStr))
             {
                 if (activity.Project.Id == 0) context.AddRecord(activity.Project, context.GetCollection<Project>());
 

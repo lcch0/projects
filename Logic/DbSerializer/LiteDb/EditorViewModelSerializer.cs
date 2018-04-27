@@ -16,7 +16,7 @@ namespace Logic.DbSerializer.LiteDb
         internal int SaveActivity(Activity activity, bool updateModel)
         {
             int id;
-            using (var context = new LiteDbSerializer(_model.Settings.ConnectionStr))
+            using (var context = SerializerFactory.GetDbSerializer(_model.Settings.ConnectionStr))
             {
                 if (activity.Project.Id == 0) context.AddRecord(activity.Project, context.GetCollection<Project>());
 
@@ -44,7 +44,7 @@ namespace Logic.DbSerializer.LiteDb
 
         internal void DeleteActivity(Activity activity, bool updateModel)
         {
-            using (var context = new LiteDbSerializer(_model.Settings.ConnectionStr))
+            using (var context = SerializerFactory.GetDbSerializer(_model.Settings.ConnectionStr))
             {
                 var collection = context.GetCollection<Activity>();
                 collection = collection.Include(x => x.Project).Include(x => x.User);

@@ -76,7 +76,7 @@ namespace Logic.ViewModels
         {
             var hour = DateTime.Now.Hour;
             var minute = DateTime.Now.Minute;
-            var minuteShift = waitMsec / (60 * 1000);
+            var minuteShift = waitMsec / Minute;
             var selected = _model.Timers
                 .Where(dayTimer => dayTimer.Hour == hour && dayTimer.Enabled > 0);
 

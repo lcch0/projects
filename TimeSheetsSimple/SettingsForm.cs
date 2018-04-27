@@ -32,14 +32,20 @@ namespace TimeSheetsSimple
         {
             DayTimer timer;
 
-            if (number == 0)
-                timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.MORNING;
-            else if (number == 1)
-                timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.NOON;
-            else if (number == 2)
-                timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.EVENING;
-            else
-                return;
+            switch (number)
+            {
+                case 0:
+                    timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.MORNING;
+                    break;
+                case 1:
+                    timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.NOON;
+                    break;
+                case 2:
+                    timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.EVENING;
+                    break;
+                default:
+                    return;
+            }
 
             cnt.Time = timer.TimeSet;
             cnt.Started = timer.Enabled > 0;
@@ -49,14 +55,20 @@ namespace TimeSheetsSimple
         {
             DayTimer timer;
 
-            if (number == 0)
-                timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.MORNING;
-            else if (number == 1)
-                timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.NOON;
-            else if (number == 2)
-                timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.EVENING;
-            else
-                return;
+            switch (number)
+            {
+                case 0:
+                    timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.MORNING;
+                    break;
+                case 1:
+                    timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.NOON;
+                    break;
+                case 2:
+                    timer = Model.DayTimers.Count > number ? Model.DayTimers[number] : DayTimer.EVENING;
+                    break;
+                default:
+                    return;
+            }
 
             timer.TimeSet = cnt.Time;
             timer.Enabled = cnt.Started ? 1 : 0;

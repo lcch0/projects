@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using LiteDB;
 using Storage.Contexts;
 using Storage.Interfaces;
@@ -8,11 +7,11 @@ namespace Storage.Serializers
 {
     /// <summary>
     /// </summary>
-    public class LiteDbSerializer : IDisposable
+    internal class LiteDbSerializer : IDbSerializer
     {
         private readonly IRepositoryContext<LiteDatabase> _context;
 
-        public LiteDbSerializer(string path)
+        internal LiteDbSerializer(string path)
         {
             _context = new LiteDbRepositoryContext(path);
         }
@@ -27,18 +26,27 @@ namespace Storage.Serializers
             return GetRecords<T>(id, null);
         }
 
-        public IEnumerable<T> GetRecords<T>(int id, LiteCollection<T> collection) where T : IIdRecord, new()
+        public IEnumerable<T> GetRecords<T>(int id, DbCollection<T> collection) where T : IIdRecord, new()
         {
-            if (collection == null)
-                collection = GetCollection<T>();
+           var liteCollection = ValidateCollection(collection);
 
-            return id > 0 ? new List<T> {collection.FindById(id)} : collection.FindAll();
+            return id > 0 ? new List<T> {liteCollection.FindById(id)} : liteCollection.FindAll();
         }
 
-        public LiteCollection<T> GetCollection<T>() where T : IIdRecord, new()
+        private LiteCollection<T> ValidateCollection<T>(DbCollection<T> collection) where T : IIdRecord, new()
+        {
+            if (collection == null)
+                collection = new DbCollection<T>(GetCollection<T>().NoSqlCollection);
+            else if (collection.NoSqlCollection == null)
+                collection.NoSqlCollection = GetCollection<T>().NoSqlCollection;
+
+            return collection.NoSqlCollection;
+        }
+
+        public DbCollection<T> GetCollection<T>() where T : IIdRecord, new()
         {
             var t = new T();
-            return _context.Connection.GetCollection<T>(t.TableName);
+            return new DbCollection<T>(_context.Connection.GetCollection<T>(t.TableName));
         }
 
         public LiteCollection<T> IncludeFunc<T>(LiteCollection<T> collection) where T : IIdRecord, new()
@@ -46,30 +54,30 @@ namespace Storage.Serializers
             return collection.Include(x => x.TableName);
         }
 
-        public int AddRecord<T>(T doc, LiteCollection<T> collection = null) where T : IIdRecord, new()
+        public int AddRecord<T>(T doc, DbCollection<T> collection = null) where T : IIdRecord, new()
         {
             if (collection == null)
                 collection = GetCollection<T>();
 
-            collection.Insert(doc);
+            collection.NoSqlCollection?.Insert(doc);
             return doc.Id;
         }
 
-        public int UpdateRecord<T>(T doc, LiteCollection<T> collection = null) where T : IIdRecord, new()
+        public int UpdateRecord<T>(T doc, DbCollection<T> collection = null) where T : IIdRecord, new()
         {
             if (collection == null)
                 collection = GetCollection<T>();
 
-            collection.Update(doc);
+            collection.NoSqlCollection?.Update(doc);
             return doc.Id;
         }
 
-        public int DeleteRecord<T>(T doc, LiteCollection<T> collection = null) where T : IIdRecord, new()
+        public int DeleteRecord<T>(T doc, DbCollection<T> collection = null) where T : IIdRecord, new()
         {
             if (collection == null)
                 collection = GetCollection<T>();
 
-            collection.Delete(doc.Id);
+            collection.NoSqlCollection?.Delete(doc.Id);
             return doc.Id;
         }
     }

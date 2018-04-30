@@ -2,7 +2,7 @@
 using Storage.Serializable;
 using Storage.Serializers;
 
-namespace Logic.DbSerializer.LiteDb
+namespace Logic.ViewModels.StorageOperations
 {
     internal class DraftViewModelSerializer
     {
@@ -15,6 +15,7 @@ namespace Logic.DbSerializer.LiteDb
 
         internal void SaveActivity(ActivityModel activityModel)
         {
+            activityModel.MergeDrafts();
             var activity = GetActivity(activityModel);
             if (activity == null)
                 return;
@@ -24,8 +25,14 @@ namespace Logic.DbSerializer.LiteDb
                 if (activity.Project.Id == 0) 
                     context.AddRecord(activity.Project);
 
-                if (activity.User.Id == 0) 
+                if (activity.User.Id == 0)
+                {
                     context.AddRecord(activity.User);
+                }
+                else
+                {
+                    context.UpdateRecord(activity.User);
+                }
 
                 if (activity.Id == 0)
                 {

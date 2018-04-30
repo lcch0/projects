@@ -3,8 +3,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using Logic.Commands;
-using Logic.DbSerializer.LiteDb;
 using Logic.Models;
+using Logic.ViewModels.StorageOperations;
 
 namespace Logic.ViewModels
 {

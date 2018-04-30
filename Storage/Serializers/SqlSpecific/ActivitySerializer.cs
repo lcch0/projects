@@ -14,19 +14,44 @@ namespace Storage.Serializers.SqlSpecific
         {
             var strcmd = $"insert into {entity.TableName}(date, desc, days, projectid, userid) values(@date, @desc, @days, @projectid, @userid)";
 
+            int projectId = GetProjectId(entity.Project?.ProjectType);
+            int userId = GetUserId(entity.User?.Name);
+
             using (SQLiteCommand cmd = new SQLiteCommand(strcmd, Serializer.Context.Connection as SQLiteConnection))
             {
                 cmd.Parameters.AddWithValue("date", entity.GetDate());
                 cmd.Parameters.AddWithValue("desc", entity.Desc);
                 cmd.Parameters.AddWithValue("days", entity.Days);
-                cmd.Parameters.AddWithValue("projectid", entity.Project?.Id);
-                cmd.Parameters.AddWithValue("userid", entity.User?.Id);
+                cmd.Parameters.AddWithValue("projectid", projectId);
+                cmd.Parameters.AddWithValue("userid", userId);
 
                 entity.Id = Serializer.Context.ExecuteNonQuery(cmd);
             }
 
             return entity.Id;
 
+        }
+
+        private int GetUserId(string userName)
+        {
+            if (string.IsNullOrEmpty(userName))
+                return 1;
+
+            var ps = new UserSerializer(Serializer);
+            var res = ps.GetRecords(userName).FirstOrDefault();
+
+            return res?.Id ?? 1;
+        }
+
+        private int GetProjectId(int? projectType)
+        {
+            if (projectType == null)
+                return 1;
+
+            var ps = new ProjectSerializer(Serializer);
+            var res = ps.GetRecords((Project.EType) projectType).FirstOrDefault();
+
+            return res?.Id ?? 1;
         }
 
         public int DeleteRecord(Activity entity)
@@ -79,7 +104,7 @@ namespace Storage.Serializers.SqlSpecific
         public int UpdateRecord(Activity entity)
         {
             if (entity.Id < 1)
-                return -1;
+                return AddRecord(entity);
 
             var strcmd = $"update {entity.TableName} set date = @date, desc = @desc, days = @days, projectid = @projectid, userid = @userid where id = {entity.Id}";
 

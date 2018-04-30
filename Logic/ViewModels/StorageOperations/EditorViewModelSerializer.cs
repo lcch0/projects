@@ -2,7 +2,7 @@
 using Storage.Serializable;
 using Storage.Serializers;
 
-namespace Logic.DbSerializer.LiteDb
+namespace Logic.ViewModels.StorageOperations
 {
     internal class EditorViewModelSerializer
     {
@@ -20,7 +20,14 @@ namespace Logic.DbSerializer.LiteDb
             {
                 if (activity.Project.Id == 0) context.AddRecord(activity.Project);
 
-                if (activity.User.Id == 0) context.AddRecord(activity.User);
+                if (activity.User.Id == 0)
+                {
+                    context.AddRecord(activity.User);
+                }
+                else
+                {
+                    context.UpdateRecord(activity.User);
+                }
 
                 if (activity.Id == 0)
                 {

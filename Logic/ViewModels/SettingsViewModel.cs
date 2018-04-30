@@ -94,6 +94,7 @@ namespace Logic.ViewModels
             }
 
             Settings = Settings.GetDefaultSettings();
+            SaveSettings(Settings);
         }
     }
 }

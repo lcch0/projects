@@ -81,5 +81,32 @@ namespace Storage.Serializers.SqlSpecific
 
             return entity.Id;
         }
+
+        public IEnumerable<User> GetRecords(string id)
+        {
+            var entity = new User();
+            var strcmd = $"select id, name from {entity.TableName} where name = '{id}'";
+
+            List<User> list = new List<User>();
+
+            using (SQLiteCommand cmd = new SQLiteCommand(strcmd, Serializer.Context.Connection as SQLiteConnection))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        entity = new User
+                        {
+                            Id = reader.GetInt32(0),
+                            Name = reader.GetString(1)
+                        };
+
+                        list.Add(entity);
+                    }
+                }
+            }
+
+            return list;
+        }
     }
 }

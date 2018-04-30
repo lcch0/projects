@@ -15,7 +15,7 @@ namespace Logic.ViewModels
         //private readonly int _waitMsec = Minute;//debug, 1 min
         private readonly int _exitWait = Minute / 6; //10 sec
         private readonly Settings _model;
-        private readonly int _waitMsec = 5 * 1000 * 60; //5 min
+        private readonly int _waitMsec = Minute;//5 * Minute; //5 min
         private CancellationTokenSource _token;
 
         public TaskViewModel(Settings model)

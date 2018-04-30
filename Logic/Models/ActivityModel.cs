@@ -36,8 +36,6 @@ namespace Logic.Models
 
         public ProjectModel.EType ProjectType { get; set; } = ProjectModel.EType.Design;
 
-        public string ProjectDesc => ProjectModel.GetProjectDesc(ProjectType);
-
         public string UserName { get; set; } = string.Empty;
 
         public void CopyTo(ActivityModel newActivity)
@@ -58,6 +56,8 @@ namespace Logic.Models
                 Date = Date,
                 Days = Days,
                 Desc = Description,
+                User = new User{Name = UserName},
+                Project = new Project{ProjectType = (int)ProjectType},
                 Drafts = Drafts.Select(d => new Draft {Id = d.Order, Desc = d.Text}).ToList()
             };
         }

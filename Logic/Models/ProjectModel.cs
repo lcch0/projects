@@ -42,6 +42,18 @@ namespace Logic.Models
                     return "Mobile";
                 case EType.Unity:
                     return "Unity";
+                case EType.Corning:
+                    return "Corning";
+                case EType.Ftth:
+                    return "Ftth";
+                case EType.Internal:
+                    return "Internal";
+                case EType.NonDev:
+                    return "Non dev";
+                case EType.Vakation:
+                    return "Vacation";
+                case EType.Training:
+                    return "Training";
                 default:
                     return "Design";
             }
@@ -49,19 +61,10 @@ namespace Logic.Models
 
         public static EType GetProjectType(int? value)
         {
-            if (value == null)
+            if(value == null)
                 return EType.Design;
 
-            if (value == (int) EType.Mobile)
-                return EType.Mobile;
-
-            if (value == (int) EType.Design)
-                return EType.Design;
-
-            if (value == (int) EType.Unity)
-                return EType.Unity;
-
-            return EType.Design;
+            return (EType) value;
         }
 
         public override string ToString()

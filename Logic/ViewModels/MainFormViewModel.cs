@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using Logic.Commands;
-using Logic.DbSerializer.LiteDb;
 using Logic.Models;
-using Storage.Serializable;
+using Logic.ViewModels.StorageOperations;
 
 namespace Logic.ViewModels
 {
@@ -44,93 +43,67 @@ namespace Logic.ViewModels
         {
             var s = new MainFormViewSerializer(Model);
 
-            if (Model.Settings == null)
-            {
-                GenerateSettings();
-                s.GenerateDefaultData();
-                return;
-            }
-
             Model.Activities = new List<ActivityModel>();
 
-            try
+            s.LoadTo();
+
+            if (Model.Activities.Count > 0)
             {
-                s.LoadTo();
+                Model.Activities = Model.Activities.OrderByDescending(e => e.Date).ToList();
+                Model.SelectedActivity = Model.Activities[0];
+                var user = Model.Users.Find(u =>
+                    u.Name.Equals(Model.SelectedActivity.UserName, StringComparison.OrdinalIgnoreCase));
+                if (user != null)
+                    Model.SelectedUser = user;
 
-                if (Model.Activities.Count > 0)
-                {
-                    Model.Activities = Model.Activities.OrderByDescending(e => e.Date).ToList();
-                    Model.SelectedActivity = Model.Activities[0];
-                    var user = Model.Users.Find(u =>
-                        u.Name.Equals(Model.SelectedActivity.UserName, StringComparison.OrdinalIgnoreCase));
-                    if (user != null)
-                        Model.SelectedUser = user;
-
-                    var project = Model.Projects.Find(u => u.ProjectType == Model.SelectedActivity.ProjectType);
-                    if (project != null)
-                        Model.SelectedProject = project;
-                }
+                var project = Model.Projects.Find(u => u.ProjectType == Model.SelectedActivity.ProjectType);
+                if (project != null)
+                    Model.SelectedProject = project;
             }
-            catch (Exception)
-            {
-                s.GenerateDefaultData();
-                throw;
-            }
-        }
-
-        private void GenerateSettings()
-        {
-            Model.Settings = new Settings();
         }
 
         private void MergeActivities(string stub)
         {
             var serializer = new EditorViewModelSerializer(Model);
-            var mergedActivities = new Dictionary<int, List<ActivityModel>>();
-            foreach (var activity in Model.Activities)
+
+            foreach (var project in Model.Projects)
             {
-                if (!mergedActivities.ContainsKey(activity.Week))
-                    mergedActivities.Add(activity.Week, new List<ActivityModel> {activity});
+                var pactivities = Model.Activities.FindAll(a => a.ProjectType == project.ProjectType);
+                if (pactivities.Count < 1)
+                    continue;
 
-                var foundActivities = mergedActivities[activity.Week];
-                var projectActivity =
-                    foundActivities.Find(a => a.ProjectType == activity.ProjectType && a.UserName == activity.UserName);
-
-                if (projectActivity == null)
+                var mergedActivities = new Dictionary<int, List<ActivityModel>>();
+                foreach (var pactivity in pactivities)
                 {
-                    foundActivities.Add(activity);
-                }
-                else
-                {
-                    var desc = activity.GetDescription(true);
-                    var newDraft = new DraftModel(new Draft {Desc = desc});
-                    GenerateAndAddDescIfEmpty(projectActivity, desc);
-                    projectActivity.Drafts.Add(newDraft);
+                    if (!mergedActivities.ContainsKey(pactivity.Week))
+                    {
+                        mergedActivities.Add(pactivity.Week, new List<ActivityModel>{pactivity});
+                    }
+                    else
+                    {
+                        mergedActivities[pactivity.Week].Add(pactivity);
+                    }
                 }
 
-                serializer.DeleteActivity(activity.GetStorageObject(), false);
-            }
+                foreach (var mergedActivity in mergedActivities)
+                {
+                    var mainActivity = mergedActivity.Value[0];
+                    var bld = new StringBuilder(mainActivity.Description);
+                    
+                    for (int i = 1; i < mergedActivity.Value.Count; i++)
+                    {
+                        var activity = mergedActivity.Value[i];
+                        var desc = activity.GetDescription(true);
+                        bld.AppendLine(desc);
+                        serializer.DeleteActivity(activity.GetStorageObject(), false);
+                    }
 
-            foreach (var lists in mergedActivities.Values)
-            foreach (var model in lists)
-            {
-                var a = GetActivity(model);
-                a.Id = 0;
-                serializer.SaveActivity(a, true);
+                    mainActivity.Description = bld.ToString();
+                    serializer.SaveActivity(mainActivity.GetStorageObject(), true);
+                }
             }
 
             LoadDB(this);
-        }
-
-        private static void GenerateAndAddDescIfEmpty(ActivityModel projectActivity, string desc)
-        {
-            if (string.IsNullOrEmpty(projectActivity.Description))
-            {
-                var ind = desc.IndexOf('\r');
-                ind = ind < 0 ? desc.IndexOf('\n') : ind;
-                if (ind > 0)
-                    projectActivity.Description = desc.Substring(0, ind);
-            }
         }
 
         private void GenerateCsvFile(string path)
@@ -143,7 +116,7 @@ namespace Logic.ViewModels
             folder = Path.Combine(folder, ReportName);
             var bld = new StringBuilder();
 
-            var activities = Model.Activities.OrderBy(a => a.Date);
+            var activities = Model.Activities.OrderByDescending(a => a.Date);
 
             foreach (var activity in activities)
             {
@@ -152,7 +125,9 @@ namespace Logic.ViewModels
                 var end = DraftViewModel.GetWeekDay(activity.Date, 5);
                 bld.Append($"{GetDateString(start)} - {GetDateString(end)};");
                 bld.Append($"{activity.ProjectType};");
+                bld.AppendLine($"{activity.Days} days;");
                 bld.AppendLine($"{activity.Description};");
+                bld.AppendLine();
             }
 
             if (bld.Length > 0)

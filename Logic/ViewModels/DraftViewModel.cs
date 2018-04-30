@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Windows.Input;
 using Logic.Commands;
-using Logic.DbSerializer.LiteDb;
 using Logic.Models;
+using Logic.ViewModels.StorageOperations;
 
 namespace Logic.ViewModels
 {
@@ -12,25 +13,34 @@ namespace Logic.ViewModels
         public DraftViewModel(TimeSheetsModel model) : base(model)
         {
             Model = model;
-            AddNewDraft = new RelayCommand<string>(OnAddNewDraft);
+            AddNewDraft = new RelayCommand<Tuple<string, ProjectModel>>(OnAddNewDraft);
         }
 
-        private List<ActivityModel> Activities => Model.Activities;
+        public List<ActivityModel> Activities => Model.Activities;
 
         public string Text { get; set; }
 
         public ICommand AddNewDraft { get; set; }
-
-        private void OnAddNewDraft(string text)
+        public List<ProjectModel> Projects => Model.Projects;
+        public ProjectModel SelectedProject
         {
-            if (string.IsNullOrEmpty(text))
+            get => Model.SelectedProject;
+            set => Model.SelectedProject = value;
+        }
+
+        private void OnAddNewDraft(Tuple<string, ProjectModel> pair)
+        {
+            if (string.IsNullOrEmpty(pair.Item1))
                 return;
 
-            Text = text;
+            Text = pair.Item1;
             var now = DateTime.Now;
-            var weekStart = GetWeekDay(now, 1);
-            var weekEnd = GetWeekDay(now, 5);
-            var foundActivity = Activities.Find(a => a.Date >= weekStart && a.Date <= weekEnd) ?? CreateNewActivity();
+            var week = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(now, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+
+            var foundActivity = Activities.Find(a => a.Week == week && a.ProjectType == pair.Item2.ProjectType);
+            
+            if(foundActivity == null)
+                foundActivity = CreateNewActivity(pair.Item2);
 
             var draft = new DraftModel(null) {Text = Text};
             foundActivity.Drafts.Add(draft);
@@ -39,14 +49,14 @@ namespace Logic.ViewModels
             s.SaveActivity(foundActivity);
         }
 
-        private ActivityModel CreateNewActivity()
+        private ActivityModel CreateNewActivity(ProjectModel pairItem2)
         {
             var a = new ActivityModel
             {
                 Date = DateTime.Now,
                 Drafts = new List<DraftModel>(),
                 Days = 5,
-                ProjectType = GetDefaultProject(),
+                ProjectType = pairItem2?.ProjectType ?? Model.SelectedProject.ProjectType,
                 UserName = Model.Settings?.UserName
             };
 
@@ -54,25 +64,7 @@ namespace Logic.ViewModels
 
             return a;
         }
-
-        private ProjectModel.EType GetDefaultProject()
-        {
-            var projStr = Model.Settings.Project;
-            if (string.IsNullOrEmpty(projStr))
-                return ProjectModel.EType.Design;
-
-            if (ProjectModel.EType.Design.ToString().Equals(projStr, StringComparison.OrdinalIgnoreCase))
-                return ProjectModel.EType.Design;
-
-            if (ProjectModel.EType.Mobile.ToString().Equals(projStr, StringComparison.OrdinalIgnoreCase))
-                return ProjectModel.EType.Mobile;
-
-            if (ProjectModel.EType.Unity.ToString().Equals(projStr, StringComparison.OrdinalIgnoreCase))
-                return ProjectModel.EType.Unity;
-
-            return ProjectModel.EType.Design;
-        }
-
+        
         internal static DateTime GetWeekDay(DateTime date, int day)
         {
             var shift = day - (int) date.DayOfWeek;

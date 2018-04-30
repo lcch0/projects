@@ -68,6 +68,34 @@ namespace Storage.Serializers.SqlSpecific
             return list;
         }
 
+        public IEnumerable<Project> GetRecords(Project.EType type)
+        {
+            var entity = new Project();
+            var strcmd = $"select id, projecttype from {entity.TableName} where projecttype = {(int)type}";
+                
+
+            List<Project> list = new List<Project>();
+
+            using (SQLiteCommand cmd = new SQLiteCommand(strcmd, Serializer.Context.Connection as SQLiteConnection))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        entity = new Project
+                        {
+                            Id = reader.GetInt32(0),
+                            ProjectType = reader.GetInt32(1)
+                        };
+
+                        list.Add(entity);
+                    }
+                }
+            }
+
+            return list;
+        }
+
         public int UpdateRecord(Project entity)
         {
             return -1;

@@ -22,6 +22,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._settingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.archiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.commaSeparatedFileCsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -31,7 +32,6 @@
             this.lastDraftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._pnlGrid = new System.Windows.Forms.Panel();
             this._timeSheetGrid = new TimeSheetsSimple.TimeSheetGrid();
-            this.archiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._pnlEditor.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this._pnlGrid.SuspendLayout();
@@ -40,19 +40,18 @@
             // _pnlEditor
             // 
             this._pnlEditor.Controls.Add(this._editor);
-            this._pnlEditor.Controls.Add(this.menuStrip1);
-            this._pnlEditor.Dock = System.Windows.Forms.DockStyle.Top;
-            this._pnlEditor.Location = new System.Drawing.Point(0, 0);
+            this._pnlEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._pnlEditor.Location = new System.Drawing.Point(0, 439);
             this._pnlEditor.Name = "_pnlEditor";
-            this._pnlEditor.Size = new System.Drawing.Size(1225, 189);
+            this._pnlEditor.Size = new System.Drawing.Size(1225, 239);
             this._pnlEditor.TabIndex = 0;
             // 
             // _editor
             // 
             this._editor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._editor.Location = new System.Drawing.Point(0, 24);
+            this._editor.Location = new System.Drawing.Point(0, 0);
             this._editor.Name = "_editor";
-            this._editor.Size = new System.Drawing.Size(1225, 165);
+            this._editor.Size = new System.Drawing.Size(1225, 239);
             this._editor.TabIndex = 0;
             // 
             // menuStrip1
@@ -81,14 +80,21 @@
             // _settingsMenuItem
             // 
             this._settingsMenuItem.Name = "_settingsMenuItem";
-            this._settingsMenuItem.Size = new System.Drawing.Size(152, 22);
+            this._settingsMenuItem.Size = new System.Drawing.Size(116, 22);
             this._settingsMenuItem.Text = "Settings";
             this._settingsMenuItem.Click += new System.EventHandler(this.OnSettingsMenu);
+            // 
+            // archiveToolStripMenuItem
+            // 
+            this.archiveToolStripMenuItem.Name = "archiveToolStripMenuItem";
+            this.archiveToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.archiveToolStripMenuItem.Text = "Archive";
+            this.archiveToolStripMenuItem.Click += new System.EventHandler(this.OnArchive);
             // 
             // mergeToolStripMenuItem
             // 
             this.mergeToolStripMenuItem.Name = "mergeToolStripMenuItem";
-            this.mergeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.mergeToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.mergeToolStripMenuItem.Text = "Merge";
             this.mergeToolStripMenuItem.Click += new System.EventHandler(this.OnMerge);
             // 
@@ -98,7 +104,7 @@
             this.commaSeparatedFileCsvToolStripMenuItem,
             this.mSExcelXlsxToolStripMenuItem});
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.quitToolStripMenuItem.Text = "Export";
             // 
             // commaSeparatedFileCsvToolStripMenuItem
@@ -117,7 +123,7 @@
             // quitToolStripMenuItem1
             // 
             this.quitToolStripMenuItem1.Name = "quitToolStripMenuItem1";
-            this.quitToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.quitToolStripMenuItem1.Size = new System.Drawing.Size(116, 22);
             this.quitToolStripMenuItem1.Text = "Quit";
             this.quitToolStripMenuItem1.Click += new System.EventHandler(this.OnQuit);
             // 
@@ -139,10 +145,10 @@
             // _pnlGrid
             // 
             this._pnlGrid.Controls.Add(this._timeSheetGrid);
-            this._pnlGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._pnlGrid.Location = new System.Drawing.Point(0, 189);
+            this._pnlGrid.Dock = System.Windows.Forms.DockStyle.Top;
+            this._pnlGrid.Location = new System.Drawing.Point(0, 24);
             this._pnlGrid.Name = "_pnlGrid";
-            this._pnlGrid.Size = new System.Drawing.Size(1225, 489);
+            this._pnlGrid.Size = new System.Drawing.Size(1225, 415);
             this._pnlGrid.TabIndex = 1;
             // 
             // _timeSheetGrid
@@ -150,33 +156,27 @@
             this._timeSheetGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this._timeSheetGrid.Location = new System.Drawing.Point(0, 0);
             this._timeSheetGrid.Name = "_timeSheetGrid";
-            this._timeSheetGrid.Size = new System.Drawing.Size(1225, 489);
+            this._timeSheetGrid.Size = new System.Drawing.Size(1225, 415);
             this._timeSheetGrid.TabIndex = 0;
-            // 
-            // archiveToolStripMenuItem
-            // 
-            this.archiveToolStripMenuItem.Name = "archiveToolStripMenuItem";
-            this.archiveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.archiveToolStripMenuItem.Text = "Archive";
-            this.archiveToolStripMenuItem.Click += new System.EventHandler(this.OnArchive);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1225, 678);
-            this.Controls.Add(this._pnlGrid);
             this.Controls.Add(this._pnlEditor);
+            this.Controls.Add(this._pnlGrid);
+            this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "Time sheets";
             this._pnlEditor.ResumeLayout(false);
-            this._pnlEditor.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this._pnlGrid.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 

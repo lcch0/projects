@@ -26,6 +26,9 @@ namespace TimeSheetsSimple
         private void SetEditMode()
         {
             _memoDesc.ReadOnly = !Model.IsInEditMode;
+            _cmbProject.Enabled = Model.IsInEditMode;
+            _dateEdit.Enabled = Model.IsInEditMode;
+            _spnDays.ReadOnly = !Model.IsInEditMode;
             _btnAdd.Text = Model.IsInEditMode ? MergeDrafts : AddEntity;
         }
 

@@ -152,7 +152,7 @@ namespace Logic.ViewModels
                 if (!Directory.Exists(arcPath))
                     Directory.CreateDirectory(arcPath);
 
-                arcPath = $"{Path.Combine(arcPath, Settings.DEFAULT_DBFILENAME)}_{DateTime.Now.ToShortDateString()}";
+                arcPath = $"{Path.Combine(arcPath, Settings.DEFAULT_DBFILENAME)}_{ToShortDateNowString()}";
                 File.Copy(currentPath, arcPath, true);
 
                 var serializer = new EditorViewModelSerializer(Model);
@@ -163,6 +163,11 @@ namespace Logic.ViewModels
 
                 LoadDB(this);
             }
+        }
+
+        private static string ToShortDateNowString()
+        {
+            return $"{DateTime.Now.Day}_{DateTime.Now.Month}";
         }
     }
 }
